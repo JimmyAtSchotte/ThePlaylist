@@ -70,7 +70,6 @@ public abstract class RepositoryTests
 
         var savesPlaylist =_repository.Add(playlist);
         _repository.Delete(savesPlaylist);
-        
         _session.Clear();
         
         var playlists = _repository.List<Playlist>();
@@ -90,7 +89,6 @@ public abstract class RepositoryTests
         savesPlaylist.Description = "UPDATED";
         
         _repository.Update(savesPlaylist);
-        
         _session.Clear();
         
         var playlists = _repository.List<Playlist>();
@@ -107,7 +105,6 @@ public abstract class RepositoryTests
         };
 
         _repository.Add(playlist);
-        
         _session.Clear();
         
         var result = _repository.Get<Playlist>(playlist.Id);
@@ -131,8 +128,8 @@ public abstract class RepositoryTests
 
         _repository.Add(playlistA);
         _repository.Add(playlistB);
-
         _session.Clear();
+        
         var fetchedPlaylistA = _repository.Get<Playlist>(playlistA.Id);
         var fetchedPlaylistB = _repository.Get<Playlist>(playlistB.Id);
     
