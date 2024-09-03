@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlaylist.Core", "ThePlaylist.Core\ThePlaylist.Core.csproj", "{59E405A0-B3C9-4D19-8C61-2BCB2E99BD30}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlaylist.Infrastructure", "ThePlaylist.Infrastructure\ThePlaylist.Infrastructure.csproj", "{F398AE93-1FB6-4191-9A17-19D7B1F899D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{59E405A0-B3C9-4D19-8C61-2BCB2E99BD30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59E405A0-B3C9-4D19-8C61-2BCB2E99BD30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59E405A0-B3C9-4D19-8C61-2BCB2E99BD30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F398AE93-1FB6-4191-9A17-19D7B1F899D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F398AE93-1FB6-4191-9A17-19D7B1F899D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F398AE93-1FB6-4191-9A17-19D7B1F899D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F398AE93-1FB6-4191-9A17-19D7B1F899D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
