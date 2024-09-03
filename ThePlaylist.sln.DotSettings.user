@@ -1,0 +1,12 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bafba071_002D7dbb_002D42ed_002D900d_002D275f1f2ea2bf/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="AddEntity" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::21584BEF-4DE8-49B3-B40B-39CA42A0018F::net8.0::ThePlaylist.Infrastructure.Tests.NHibernate.RepositoryTests.AddEntity&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f7e6441f_002D34af_002D422d_002D8f30_002Dae7d21b92f9d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="AddEntity #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::21584BEF-4DE8-49B3-B40B-39CA42A0018F::net8.0::ThePlaylist.Infrastructure.Tests.NHibernate.RepositoryInMemoryTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::21584BEF-4DE8-49B3-B40B-39CA42A0018F::net8.0::ThePlaylist.Infrastructure.Tests.NHibernate.RepositorySqlExpressTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
