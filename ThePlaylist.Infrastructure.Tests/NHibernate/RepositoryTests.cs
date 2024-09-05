@@ -114,19 +114,26 @@ public abstract class RepositoryTests
     [Test]
     public void ManyToManyRelationship()
     {
+        var rock = new Genre() { Name = "Rock" };
+        var pop = new Genre() { Name = "Pop" };
+        
         var trackA = new Track { Name = "Track A" };
+        trackA.Genres.Add(rock);
+        
         var trackB = new Track { Name = "Track B" };
+        trackB.Genres.Add(pop);
 
         var playlistA = new Playlist { Name = "Playlist A" };
         var playlistB = new Playlist { Name = "Playlist B" };
 
-        playlistA.Tracks.Add(trackA);
-        playlistA.Tracks.Add(trackB);
+        playlistA.AddTrack(trackA);
+        playlistA.AddTrack(trackB);
     
-        playlistB.Tracks.Add(trackA);
-        playlistB.Tracks.Add(trackB);
+        playlistB.AddTrack(trackA);
+        playlistB.AddTrack(trackB);
 
         _repository.Add(playlistA);
+        _session.Clear();
         _repository.Add(playlistB);
         _session.Clear();
         
@@ -141,5 +148,22 @@ public abstract class RepositoryTests
 
         fetchedTrackA.Playlists.Should().HaveCount(2);
         fetchedTrackB.Playlists.Should().HaveCount(2);
+        
+        fetchedTrackA.Genres.Should().HaveCount(1);
+        fetchedTrackB.Genres.Should().HaveCount(1);
+    }
+    
+    [Test]
+    public void SelfReferencingRelationship()
+    {
+        var rock = new Genre() { Name = "Rock" };
+        var metal = new Genre() { Name = "metal" };
+        rock.AddSubGenre(metal);
+        
+        _repository.Add(rock);
+        _session.Clear();
+
+        var fetchedGenre = _repository.Get<Genre>(rock.Id);
+        fetchedGenre.SubGenres.Should().HaveCount(1);
     }
 }

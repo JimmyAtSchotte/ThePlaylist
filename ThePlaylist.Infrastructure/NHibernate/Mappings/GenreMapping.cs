@@ -15,5 +15,27 @@ public class GenreMapping : ClassMapping<Genre>
             map.NotNullable(true);
             map.Length(255);
         });
+        
+        Bag(x => x.Tracks, map =>
+        {
+            map.Table("TrackGenres");
+            map.Key(x => x.Column("GenreId"));
+            map.Inverse(true);
+            map.Cascade(Cascade.All);
+        }, rel => rel.ManyToMany(x => x.Column("TrackId")));
+        
+        ManyToOne(x => x.Parent, map =>
+        {
+            map.Column("ParentGenreId");
+            map.ForeignKey("FK_Genre_ParentGenre");
+            map.Cascade(Cascade.None);
+        });
+
+        Bag(x => x.SubGenres, map =>
+        {
+            map.Key(k => k.Column("ParentGenreId"));
+            map.Inverse(true);
+            map.Cascade(Cascade.All.Include(Cascade.DeleteOrphans));
+        }, map => map.OneToMany());
     }
 }

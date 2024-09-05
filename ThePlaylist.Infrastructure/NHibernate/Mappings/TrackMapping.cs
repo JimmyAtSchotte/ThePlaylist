@@ -23,6 +23,15 @@ public class TrackMapping : ClassMapping<Track>
             map.Inverse(true);
             map.Cascade(Cascade.All);
         }, rel => rel.ManyToMany(x => x.Column("PlaylistId")));
+        
+        
+        Bag(x => x.Genres, map =>
+        {
+            map.Table("TrackGenres");
+            map.Key(x => x.Column("TrackId"));
+            map.Inverse(false);
+            map.Cascade(Cascade.All);
+        }, rel => rel.ManyToMany(x => x.Column("GenreId")));
     }
 }
 
