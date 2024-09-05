@@ -31,6 +31,5 @@ public static class DependencyInjection
 
         services.AddSingleton<ISessionFactory>(svc => svc.GetRequiredService<Configuration>().BuildSessionFactory());
         services.AddTransient<ISession>(svc => svc.GetRequiredService<ISessionFactory>().OpenSession());
-
     }
 }

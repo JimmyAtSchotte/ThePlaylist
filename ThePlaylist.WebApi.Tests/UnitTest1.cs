@@ -1,17 +1,17 @@
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
+using ThePlaylist.Infrastructure.NHibernate;
 
 namespace ThePlaylist.WebApi.Tests;
 
 public class Tests
 {
-    private WebApplicationFactory<Program> _factory;
+    private CustomWebApplicationFactory _factory;
     private HttpClient _client;
     
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _factory = new WebApplicationFactory<Program>();
+        _factory = new CustomWebApplicationFactory(services => services.AddNHibernate("Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test;Trusted_Connection=True;"));
     }
 
     [SetUp]
