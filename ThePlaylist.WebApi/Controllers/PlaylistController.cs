@@ -15,7 +15,7 @@ public class PlaylistController(IRepository repository) : Controller
     }
     
     [HttpPost("api/playlist")]
-    public IActionResult Add([FromBody] TrackAddCommand command)
+    public IActionResult Add([FromBody] PlaylistAddCommand command)
     {
         var playlist = new Playlist()
         {
