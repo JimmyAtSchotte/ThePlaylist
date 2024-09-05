@@ -20,7 +20,7 @@ public sealed class SqlExpressDatabaseConfiguration : IDatabaseConfiguration
             Configuration = new Configuration();
             Configuration.DataBaseIntegration(db =>
             {
-                db.ConnectionString = "Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist;Trusted_Connection=True;";
+                db.ConnectionString = "Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test;Trusted_Connection=True;";
                 db.Driver<SqlClientDriver>();
                 db.Dialect<MsSql2012Dialect>();
                 db.ConnectionProvider<DriverConnectionProvider>();
