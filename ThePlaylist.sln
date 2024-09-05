@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlaylist.Infrastructure.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlaylist.WebApi", "ThePlaylist.WebApi\ThePlaylist.WebApi.csproj", "{37FC0CC5-4C03-45B7-951B-C9A432C40EE1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlaylist.WebApi.Tests", "ThePlaylist.WebApi.Tests\ThePlaylist.WebApi.Tests.csproj", "{848F81BB-A9B2-442E-8F56-1602DE301180}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{37FC0CC5-4C03-45B7-951B-C9A432C40EE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37FC0CC5-4C03-45B7-951B-C9A432C40EE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37FC0CC5-4C03-45B7-951B-C9A432C40EE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{848F81BB-A9B2-442E-8F56-1602DE301180}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{848F81BB-A9B2-442E-8F56-1602DE301180}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{848F81BB-A9B2-442E-8F56-1602DE301180}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{848F81BB-A9B2-442E-8F56-1602DE301180}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

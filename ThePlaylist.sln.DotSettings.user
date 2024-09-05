@@ -9,5 +9,6 @@
   &lt;TestAncestor&gt;&#xD;
     &lt;TestId&gt;NUnit3x::21584BEF-4DE8-49B3-B40B-39CA42A0018F::net8.0::ThePlaylist.Infrastructure.Tests.NHibernate.RepositoryInMemoryTests&lt;/TestId&gt;&#xD;
     &lt;TestId&gt;NUnit3x::21584BEF-4DE8-49B3-B40B-39CA42A0018F::net8.0::ThePlaylist.Infrastructure.Tests.NHibernate.RepositorySqlExpressTests&lt;/TestId&gt;&#xD;
+    &lt;TestId&gt;NUnit3x::848F81BB-A9B2-442E-8F56-1602DE301180::net8.0::ThePlaylist.WebApi.Tests.Tests.Test1&lt;/TestId&gt;&#xD;
   &lt;/TestAncestor&gt;&#xD;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

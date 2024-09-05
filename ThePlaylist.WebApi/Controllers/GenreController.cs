@@ -11,6 +11,7 @@ public class GenreController(IRepository repository) : Controller
     public IActionResult List()
     {
         var genres = repository.List<Genre>();
+        
         return Ok(genres);
     }
     
