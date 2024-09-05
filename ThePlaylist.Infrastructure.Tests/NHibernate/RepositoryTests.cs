@@ -53,7 +53,6 @@ public abstract class RepositoryTests
         };
 
         _repository.Add(playlist);
-        _session.Clear();
         
         var playlists = _repository.List<Playlist>();
         playlists.Should().HaveCount(1);
@@ -70,7 +69,6 @@ public abstract class RepositoryTests
 
         var savesPlaylist =_repository.Add(playlist);
         _repository.Delete(savesPlaylist);
-        _session.Clear();
         
         var playlists = _repository.List<Playlist>();
         playlists.Should().NotContain(x => x.Id == savesPlaylist.Id);
@@ -89,7 +87,6 @@ public abstract class RepositoryTests
         savesPlaylist.Description = "UPDATED";
         
         _repository.Update(savesPlaylist);
-        _session.Clear();
         
         var playlists = _repository.List<Playlist>();
         playlists.First(x => x.Id == savesPlaylist.Id).Description.Should().Be("UPDATED");
@@ -105,7 +102,6 @@ public abstract class RepositoryTests
         };
 
         _repository.Add(playlist);
-        _session.Clear();
         
         var result = _repository.Get<Playlist>(playlist.Id);
         result.Should().NotBeNull();
@@ -133,9 +129,7 @@ public abstract class RepositoryTests
         playlistB.AddTrack(trackB);
 
         _repository.Add(playlistA);
-        _session.Clear();
         _repository.Add(playlistB);
-        _session.Clear();
         
         var fetchedPlaylistA = _repository.Get<Playlist>(playlistA.Id);
         var fetchedPlaylistB = _repository.Get<Playlist>(playlistB.Id);
@@ -161,7 +155,6 @@ public abstract class RepositoryTests
         rock.AddSubGenre(metal);
         
         _repository.Add(rock);
-        _session.Clear();
 
         var fetchedGenre = _repository.Get<Genre>(rock.Id);
         fetchedGenre.SubGenres.Should().HaveCount(1);

@@ -11,6 +11,9 @@ public class Repository(ISession session) : IRepository
         using var transaction = session.BeginTransaction();
         session.Save(entity);
         transaction.Commit();
+        
+        session.Clear();
+        
         return entity;
     }
 
@@ -24,6 +27,7 @@ public class Repository(ISession session) : IRepository
         using var transaction = session.BeginTransaction();
         session.Delete(entity);
         transaction.Commit();
+        session.Clear();
     }
     
     public T Update<T>(T entity) where T : class
@@ -31,6 +35,8 @@ public class Repository(ISession session) : IRepository
         using var transaction = session.BeginTransaction();
         session.Update(entity);
         transaction.Commit();
+        
+        session.Clear();
         
         return entity;
     }
