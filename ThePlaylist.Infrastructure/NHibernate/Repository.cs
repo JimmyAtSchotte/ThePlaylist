@@ -1,7 +1,4 @@
 ﻿using NHibernate;
-using NHibernate.Cfg;
-using NHibernate.Criterion;
-using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Core.Specification;
 
