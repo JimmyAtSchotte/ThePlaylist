@@ -1,33 +1,20 @@
 ﻿using FluentAssertions;
-using NHibernate;
-using NHibernate.Tool.hbm2ddl;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
-using ThePlaylist.Infrastructure.NHibernate;
-using ThePlaylist.Infrastructure.Tests.NHibernate.DatabaseConfigurations;
 
 namespace ThePlaylist.Infrastructure.Tests.NHibernate;
 
 [TestFixture]
 public abstract class RepositoryTests
 {
-    private IRepository _repository;
-    private ISession _session;
-    protected abstract IDatabaseConfiguration DatabaseConfiguration { get; }
+    protected abstract IRepository Repository { get; }
+    
 
     [SetUp]
-    public void Setup()
-    {
-        _session = DatabaseConfiguration.SessionFactory.OpenSession();
-        new SchemaExport(DatabaseConfiguration.Configuration).Execute(true, true, false, _session.Connection, null);
-        _repository = new Repository(_session);
-    }
+    public abstract void Setup();
 
     [TearDown]
-    public void TearDown()
-    {
-        _session.Dispose();
-    }
+    public abstract void TearDown();
     
     [Test]
     public void AddEntity()
@@ -38,7 +25,7 @@ public abstract class RepositoryTests
             Description = "My playlist description"
         };
 
-        var savesPlaylist = _repository.Add(playlist);
+        var savesPlaylist = Repository.Add(playlist);
         savesPlaylist.Id.Should().NotBe(Guid.Empty);
     }
     
@@ -51,9 +38,9 @@ public abstract class RepositoryTests
             Description = "My playlist 2 description"
         };
 
-        _repository.Add(playlist);
+        Repository.Add(playlist);
         
-        var playlists = _repository.List<Playlist>();
+        var playlists = Repository.List<Playlist>();
         playlists.Should().HaveCount(1);
     }
     
@@ -66,10 +53,10 @@ public abstract class RepositoryTests
             Description = "My playlist 3 description"
         };
 
-        var savesPlaylist =_repository.Add(playlist);
-        _repository.Delete(savesPlaylist);
+        var savesPlaylist =Repository.Add(playlist);
+        Repository.Delete(savesPlaylist);
         
-        var playlists = _repository.List<Playlist>();
+        var playlists = Repository.List<Playlist>();
         playlists.Should().NotContain(x => x.Id == savesPlaylist.Id);
     }
     
@@ -82,12 +69,12 @@ public abstract class RepositoryTests
             Description = "My playlist 4 description"
         };
 
-        var savesPlaylist =_repository.Add(playlist);
+        var savesPlaylist =Repository.Add(playlist);
         savesPlaylist.Description = "UPDATED";
         
-        _repository.Update(savesPlaylist);
+        Repository.Update(savesPlaylist);
         
-        var playlists = _repository.List<Playlist>();
+        var playlists = Repository.List<Playlist>();
         playlists.First(x => x.Id == savesPlaylist.Id).Description.Should().Be("UPDATED");
     }
     
@@ -100,9 +87,9 @@ public abstract class RepositoryTests
             Description = "My playlist 5 description"
         };
 
-        _repository.Add(playlist);
+        Repository.Add(playlist);
         
-        var result = _repository.Get<Playlist>(playlist.Id);
+        var result = Repository.Get<Playlist>(playlist.Id);
         result.Should().NotBeNull();
     }
     
@@ -127,17 +114,17 @@ public abstract class RepositoryTests
         playlistB.AddTrack(trackA);
         playlistB.AddTrack(trackB);
 
-        _repository.Add(playlistA);
-        _repository.Add(playlistB);
+        Repository.Add(playlistA);
+        Repository.Add(playlistB);
         
-        var fetchedPlaylistA = _repository.Get<Playlist>(playlistA.Id);
-        var fetchedPlaylistB = _repository.Get<Playlist>(playlistB.Id);
+        var fetchedPlaylistA = Repository.Get<Playlist>(playlistA.Id);
+        var fetchedPlaylistB = Repository.Get<Playlist>(playlistB.Id);
     
         fetchedPlaylistA.Tracks.Should().HaveCount(2);
         fetchedPlaylistB.Tracks.Should().HaveCount(2);
 
-        var fetchedTrackA = _repository.Get<Track>(trackA.Id);
-        var fetchedTrackB = _repository.Get<Track>(trackB.Id);
+        var fetchedTrackA = Repository.Get<Track>(trackA.Id);
+        var fetchedTrackB = Repository.Get<Track>(trackB.Id);
 
         fetchedTrackA.Playlists.Should().HaveCount(2);
         fetchedTrackB.Playlists.Should().HaveCount(2);
@@ -153,9 +140,9 @@ public abstract class RepositoryTests
         var metal = new Genre() { Name = "metal" };
         rock.AddSubGenre(metal);
         
-        _repository.Add(rock);
+        Repository.Add(rock);
 
-        var fetchedGenre = _repository.Get<Genre>(rock.Id);
+        var fetchedGenre = Repository.Get<Genre>(rock.Id);
         fetchedGenre.SubGenres.Should().HaveCount(1);
     }
 }
