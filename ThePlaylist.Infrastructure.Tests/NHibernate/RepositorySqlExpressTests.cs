@@ -7,7 +7,7 @@ using ThePlaylist.Infrastructure.NHibernate;
 
 namespace ThePlaylist.Infrastructure.Tests.NHibernate;
 
-public class RepositorySqlExpressTests : RepositoryTests
+public class RepositorySqlExpressTests : BaseRepositoryTests
 {
     private IRepository _repository;
     private ISession _session;

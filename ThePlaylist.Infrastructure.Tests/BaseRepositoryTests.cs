@@ -1,15 +1,14 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
-using ThePlaylist.Core.Specification;
 using ThePlaylist.Core.Specification.Common.Genre;
 using ThePlaylist.Core.Specification.Criterion;
 using ThePlaylist.Core.Specification.Genre;
 
-namespace ThePlaylist.Infrastructure.Tests.NHibernate;
+namespace ThePlaylist.Infrastructure.Tests;
 
 [TestFixture]
-public abstract class RepositoryTests
+public abstract class BaseRepositoryTests
 {
     protected abstract IRepository Repository { get; }
     
