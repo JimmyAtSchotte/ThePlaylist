@@ -1,4 +1,4 @@
-﻿namespace ThePlaylist.Core.Specification.Genre;
+﻿namespace ThePlaylist.Core.Specification;
 
 public class Specifications
 {
