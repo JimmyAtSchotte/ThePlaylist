@@ -164,12 +164,12 @@ public abstract class RepositoryTests
     }
     
     [Test]
-    public void SpecificationByName2()
+    public void SpecificationExpression()
     {
         var rock = new Genre() { Name = "Rock" };
         Repository.Add(rock);
 
-        var specification = Specifications.Genre.ByName2(rock.Name).Build();
+        var specification = Specifications.Genre.Where(x => x.Name == rock.Name).Build();
         var fetchedGenres = Repository.List(specification).ToList();
 
         fetchedGenres.Should().HaveCount(1);
