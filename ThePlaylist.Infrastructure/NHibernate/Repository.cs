@@ -57,7 +57,7 @@ public class Repository(ISession session) : IRepository
         
         foreach (var criteria in specification.Criterias)
         {
-            if (criteria is SimpleCriteria simpleCriteria)
+            if (criteria is SimpleCriterion simpleCriteria)
             {
                 switch (simpleCriteria.ComparisonType)
                 {

@@ -2,5 +2,5 @@
 
 public class Restrictions
 {
-    public static SimpleCriteria Eq(string property, object value) => new SimpleCriteria(property, ComparisonType.Equals, value);
+    public static SimpleCriterion Eq(string property, object value) => new SimpleCriterion(property, ComparisonType.Equals, value);
 }

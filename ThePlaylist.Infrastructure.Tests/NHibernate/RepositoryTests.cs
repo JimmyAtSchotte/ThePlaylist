@@ -3,6 +3,7 @@ using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Core.Specification;
 using ThePlaylist.Core.Specification.Common.Genre;
+using ThePlaylist.Core.Specification.Criterion;
 using ThePlaylist.Core.Specification.Genre;
 
 namespace ThePlaylist.Infrastructure.Tests.NHibernate;
@@ -150,12 +151,25 @@ public abstract class RepositoryTests
     }
     
     [Test]
-    public void Specification()
+    public void SpecificationByName()
     {
         var rock = new Genre() { Name = "Rock" };
         Repository.Add(rock);
 
         var specification = Specifications.Genre.ByName(rock.Name).Build();
+        var fetchedGenres = Repository.List(specification).ToList();
+
+        fetchedGenres.Should().HaveCount(1);
+        fetchedGenres.First().Id.Should().Be(rock.Id);
+    }
+    
+    [Test]
+    public void SpecificationCriteria()
+    {
+        var rock = new Genre() { Name = "Rock" };
+        Repository.Add(rock);
+
+        var specification = Specifications.Genre.Where(Restrictions.Eq("Name", rock.Name)).Build();
         var fetchedGenres = Repository.List(specification).ToList();
 
         fetchedGenres.Should().HaveCount(1);

@@ -4,12 +4,12 @@ namespace ThePlaylist.Core.Specification;
 
 public class Specification<T> : ISpecification<T>
 {
-    private readonly IList<ICriteria> _criteras = new List<ICriteria>();
+    private readonly IList<ICriterion> _criteria = new List<ICriterion>();
     
-    public void AddCriteria(ICriteria restriction)
+    public void AddCriterion(ICriterion restriction)
     {
-        _criteras.Add(restriction);
+        _criteria.Add(restriction);
     }
     
-    public IEnumerable<ICriteria> Criterias => _criteras;
+    public IEnumerable<ICriterion> Criterias => _criteria;
 }

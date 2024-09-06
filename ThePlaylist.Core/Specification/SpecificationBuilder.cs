@@ -19,9 +19,9 @@ public class SpecificationBuilder<T>
         return _specification;
     }
 
-    public SpecificationBuilder<T> Where(ICriteria restriction)
+    public SpecificationBuilder<T> Where(ICriterion criterion)
     {
-        _specification.AddCriteria(restriction);
+        _specification.AddCriterion(criterion);
         return this;
     }
 }

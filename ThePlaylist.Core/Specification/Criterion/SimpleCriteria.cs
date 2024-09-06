@@ -1,11 +1,11 @@
 ﻿namespace ThePlaylist.Core.Specification.Criterion;
 
-public interface ICriteria
+public interface ICriterion
 {
     
 }
 
-public class SimpleCriteria(string property, ComparisonType comparisonType, object value) : ICriteria
+public class SimpleCriterion(string property, ComparisonType comparisonType, object value) : ICriterion
 {
     public string Property { get; } = property;
     public ComparisonType ComparisonType { get; } = comparisonType;
