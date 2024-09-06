@@ -4,13 +4,13 @@ using NHibernate.Criterion;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Core.Specification;
-using ThePlaylist.Core.Specification.Criterion;
-using Restrictions = NHibernate.Criterion.Restrictions;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
 public class Repository(ISession session) : IRepository
 {
+    private static readonly SpecificationQuery SpecificationQuery = new();
+
     public T Add<T>(T entity) where T : class
     {
         using var transaction = session.BeginTransaction();
@@ -53,25 +53,7 @@ public class Repository(ISession session) : IRepository
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
-        var query = session.CreateCriteria<T>();
-        
-        foreach (var criteria in specification.Criterias)
-        {
-            if (criteria is SimpleCriterion simpleCriteria)
-            {
-                switch (simpleCriteria.ComparisonType)
-                {
-                    case ComparisonType.Equals:
-                        query.Add(Restrictions.Eq(simpleCriteria.Property, simpleCriteria.Value));
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            
-        }
-
-        return query.List<T>();
+        return session.Query(specification);
 
     }
 }
