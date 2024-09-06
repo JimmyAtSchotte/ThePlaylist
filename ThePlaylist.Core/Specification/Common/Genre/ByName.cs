@@ -1,4 +1,6 @@
-﻿namespace ThePlaylist.Core.Specification.Common.Genre;
+﻿using ThePlaylist.Core.Specification.Criterion;
+
+namespace ThePlaylist.Core.Specification.Common.Genre;
 
 
 public static partial class GenreSpecifications

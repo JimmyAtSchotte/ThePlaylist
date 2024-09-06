@@ -4,6 +4,7 @@ using NHibernate.Criterion;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Core.Specification;
+using ThePlaylist.Core.Specification.Criterion;
 using Restrictions = NHibernate.Criterion.Restrictions;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
@@ -52,17 +53,20 @@ public class Repository(ISession session) : IRepository
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
-        var query = session.CreateCriteria<Genre>();
+        var query = session.CreateCriteria<T>();
         
         foreach (var criteria in specification.Criterias)
         {
-            switch (criteria.RestrictionType)
+            if (criteria is SimpleCriteria simpleCriteria)
             {
-                case RestrictionType.Equals:
-                    query.Add(Restrictions.Eq(criteria.Property, criteria.Value));
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (simpleCriteria.ComparisonType)
+                {
+                    case ComparisonType.Equals:
+                        query.Add(Restrictions.Eq(simpleCriteria.Property, simpleCriteria.Value));
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
             
         }
