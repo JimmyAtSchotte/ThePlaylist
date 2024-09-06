@@ -1,6 +1,7 @@
 ﻿using NHibernate;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Core.Specification;
+using ThePlaylist.Infrastructure.NHibernate.Specification;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 

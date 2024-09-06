@@ -1,4 +1,5 @@
-﻿using ThePlaylist.Core.Specification.Criterion;
+﻿using System.Linq.Expressions;
+using ThePlaylist.Core.Specification.Criterion;
 
 namespace ThePlaylist.Core.Specification;
 
@@ -11,5 +12,6 @@ public class Specification<T> : ISpecification<T>
         _criteria.Add(restriction);
     }
     
-    public IEnumerable<ICriterion> Criterias => _criteria;
+    public IEnumerable<ICriterion> Criteria => _criteria;
+    public Expression<Func<T, bool>> Expression { get; set; }
 }

@@ -164,6 +164,19 @@ public abstract class RepositoryTests
     }
     
     [Test]
+    public void SpecificationByName2()
+    {
+        var rock = new Genre() { Name = "Rock" };
+        Repository.Add(rock);
+
+        var specification = Specifications.Genre.ByName2(rock.Name).Build();
+        var fetchedGenres = Repository.List(specification).ToList();
+
+        fetchedGenres.Should().HaveCount(1);
+        fetchedGenres.First().Id.Should().Be(rock.Id);
+    }
+    
+    [Test]
     public void SpecificationCriteria()
     {
         var rock = new Genre() { Name = "Rock" };

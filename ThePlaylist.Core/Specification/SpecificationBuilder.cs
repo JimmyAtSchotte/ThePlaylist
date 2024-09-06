@@ -1,4 +1,4 @@
-﻿using System.Reflection.Metadata;
+﻿using System.Linq.Expressions;
 using ThePlaylist.Core.Specification.Criterion;
 
 namespace ThePlaylist.Core.Specification;
@@ -22,6 +22,12 @@ public class SpecificationBuilder<T>
     public SpecificationBuilder<T> Where(ICriterion criterion)
     {
         _specification.AddCriterion(criterion);
+        return this;
+    }
+    
+    public SpecificationBuilder<T> Where(Expression<Func<T, bool>> expression)
+    {
+        _specification.Expression = expression;;
         return this;
     }
 }
