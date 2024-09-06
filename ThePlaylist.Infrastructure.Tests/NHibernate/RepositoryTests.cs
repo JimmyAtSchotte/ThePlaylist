@@ -4,7 +4,6 @@ using NHibernate.Tool.hbm2ddl;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Infrastructure.NHibernate;
-using ThePlaylist.Infrastructure.NHibernate.Mappings;
 using ThePlaylist.Infrastructure.Tests.NHibernate.DatabaseConfigurations;
 
 namespace ThePlaylist.Infrastructure.Tests.NHibernate;

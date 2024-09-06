@@ -1,4 +1,8 @@
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using NHibernate;
+using NHibernate.Cfg;
+using NHibernate.Tool.hbm2ddl;
 using ThePlaylist.Infrastructure.NHibernate;
 
 namespace ThePlaylist.WebApi.Tests;
@@ -11,13 +15,21 @@ public class Tests
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _factory = new CustomWebApplicationFactory(services => services.AddNHibernate("Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test;Trusted_Connection=True;"));
+        // _factory = new CustomWebApplicationFactory(services => services.AddNHibernate(hibernate =>
+        //     hibernate.UseSqlExpress(
+        //     "Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test;Trusted_Connection=True;")));
+            
+        _factory = new CustomWebApplicationFactory(services => services.AddNHibernate(hibernate =>
+            hibernate.UseSqlLite()));
+
     }
 
     [SetUp]
     public void SetUp()
     {
         _client = _factory.CreateClient();
+
+      
     }
     
     [OneTimeTearDown]

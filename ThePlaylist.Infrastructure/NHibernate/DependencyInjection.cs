@@ -4,12 +4,22 @@ using NHibernate.Cfg;
 using NHibernate.Connection;
 using NHibernate.Dialect;
 using NHibernate.Driver;
+using NHibernate.Tool.hbm2ddl;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
 public static class DependencyInjection
 {
-    public static void AddNHibernate(this IServiceCollection services, string connectionString)
+    public static void AddNHibernate(this IServiceCollection services, Action<NHibernateConfiguration> configure)
+    {
+        var conf = new NHibernateConfiguration(services);
+        configure(conf);
+    }
+}
+
+public class NHibernateConfiguration(IServiceCollection services)
+{
+    public void UseSqlExpress(string connectionString)
     {
         services.AddSingleton<Configuration>(_ =>
         {
@@ -32,4 +42,36 @@ public static class DependencyInjection
         services.AddSingleton<ISessionFactory>(svc => svc.GetRequiredService<Configuration>().BuildSessionFactory());
         services.AddTransient<ISession>(svc => svc.GetRequiredService<ISessionFactory>().OpenSession());
     }
+
+    public void UseSqlLite()
+    {
+        services.AddSingleton<Configuration>(_ =>
+        {
+            var configuration = new Configuration();
+            configuration.DataBaseIntegration(db =>
+            {
+                db.Dialect<SQLiteDialect>();
+                db.Driver<SQLite20Driver>();
+                db.ConnectionString = "Data Source=:memory:;Version=3;New=True;";
+                db.ConnectionReleaseMode = ConnectionReleaseMode.OnClose;
+                db.LogSqlInConsole = true;
+            });
+            
+            configuration.AddMappingsFromAssembly(typeof(INamespacePlaceholder).Assembly);
+    
+            return configuration;
+        });
+
+        services.AddSingleton<ISessionFactory>(svc => svc.GetRequiredService<Configuration>().BuildSessionFactory());
+        services.AddTransient<ISession>(svc =>
+        {
+            var session =  svc.GetRequiredService<ISessionFactory>().OpenSession();
+            var configuration = svc.GetRequiredService<Configuration>();
+        
+            new SchemaExport(configuration).Execute(true, true, false, session.Connection, null);
+            return session;
+        });
+    }
+    
+    
 }

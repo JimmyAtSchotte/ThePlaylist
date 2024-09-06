@@ -19,8 +19,9 @@ public class Program
         builder.Services.AddSwaggerGen();
         builder.Services.AddControllers();
         builder.Services.AddTransient<IRepository, Repository>();
-        builder.Services.AddNHibernate("Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist;Trusted_Connection=True;");
-      
+        builder.Services
+            .AddNHibernate(hibernate => hibernate.UseSqlExpress("Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist;Trusted_Connection=True;"));
+            
         var app = builder.Build();
 
         app.UseHttpsRedirection();
