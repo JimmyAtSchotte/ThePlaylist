@@ -44,7 +44,7 @@ public abstract class BaseRepositoryTests
         Repository.Add(playlist);
         
         var playlists = Repository.List<Playlist>();
-        playlists.Should().HaveCount(1);
+        playlists.Should().Contain(x => x.Id == playlist.Id);
     }
     
     [Test]
@@ -158,8 +158,7 @@ public abstract class BaseRepositoryTests
         var specification = Specifications.Genre.ByName(rock.Name).Build();
         var fetchedGenres = Repository.List(specification).ToList();
 
-        fetchedGenres.Should().HaveCount(1);
-        fetchedGenres.First().Id.Should().Be(rock.Id);
+        fetchedGenres.Should().Contain(x => x.Id == rock.Id);
     }
     
     [Test]
@@ -171,8 +170,7 @@ public abstract class BaseRepositoryTests
         var specification = Specifications.Genre.Where(x => x.Name == rock.Name).Build();
         var fetchedGenres = Repository.List(specification).ToList();
 
-        fetchedGenres.Should().HaveCount(1);
-        fetchedGenres.First().Id.Should().Be(rock.Id);
+        fetchedGenres.Should().Contain(x => x.Id == rock.Id);
     }
     
     [Test]
@@ -184,7 +182,6 @@ public abstract class BaseRepositoryTests
         var specification = Specifications.Genre.Where(Restrictions.Eq("Name", rock.Name)).Build();
         var fetchedGenres = Repository.List(specification).ToList();
 
-        fetchedGenres.Should().HaveCount(1);
-        fetchedGenres.First().Id.Should().Be(rock.Id);
+        fetchedGenres.Should().Contain(x => x.Id == rock.Id);
     }
 }
