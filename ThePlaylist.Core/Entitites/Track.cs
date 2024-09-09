@@ -7,10 +7,10 @@ public class Track
     public virtual Guid Id { get;  set; }
     public virtual string Name { get;  set; }
 
-    public virtual IEnumerable<Genre> Genres
+    public virtual IList<Genre> Genres
     {
         get => _genres;
-        set => _genres = value.ToList();
+        set => _genres = value;
     }
 
     public virtual IEnumerable<Playlist> Playlists

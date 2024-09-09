@@ -72,7 +72,7 @@ public class Repository : IRepository
 
             foreach (var criterion in criteria)
                 criteriaStrategy.Apply(query, criterion);
-
+            
             return query.List<T>();
         }
         

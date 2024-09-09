@@ -1,4 +1,5 @@
 ﻿using Ardalis.Specification;
+using ThePlaylist.Infrastructure.NHibernate.Evaluators;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
@@ -12,7 +13,8 @@ public class LinqQuerySpecificationEvaluator : ISpecificationEvaluator
         {
             WhereEvaluator.Instance,
             OrderEvaluator.Instance,
-            PaginationEvaluator.Instance
+            PaginationEvaluator.Instance,
+            FetchEvaluator.Instance
         });
     }
     

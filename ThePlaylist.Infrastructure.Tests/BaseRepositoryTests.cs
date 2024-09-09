@@ -217,7 +217,5 @@ public abstract class BaseRepositoryTests
         fetchedTracks.FirstOrDefault(x => x.Id == trackA.Id).Genres.Should().NotBeEmpty();
         fetchedTracks.Should().Contain(x => x.Id == trackB.Id);
         fetchedTracks.FirstOrDefault(x => x.Id == trackB.Id).Genres.Should().NotBeEmpty();
-
-        
     }
 }
