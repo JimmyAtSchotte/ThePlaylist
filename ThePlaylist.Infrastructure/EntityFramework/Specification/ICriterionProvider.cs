@@ -1,8 +1,9 @@
-﻿using NHibernate;
+﻿using System.Linq.Expressions;
+using NHibernate;
 
 namespace ThePlaylist.Infrastructure.EntityFramework.Specification;
 
 public interface ICriterionProvider
 {
-    void ApplyTo<T>(IQueryable<T> queryable);
+    Expression<Func<T, bool>>? CreateExpression<T>();
 }

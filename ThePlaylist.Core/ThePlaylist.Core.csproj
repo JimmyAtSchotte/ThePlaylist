@@ -10,4 +10,8 @@
       <Folder Include="Specification\Common\" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
+    </ItemGroup>
+
 </Project>

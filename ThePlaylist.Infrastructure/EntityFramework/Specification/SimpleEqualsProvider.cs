@@ -18,10 +18,10 @@ public class SimpleEqualsFactory : ICriterionFactory
 
 public class SimpleEqualsProvider(SimpleCriterion? simpleCriterion) : ICriterionProvider
 {
-    public void ApplyTo<T>(IQueryable<T> queryable)
+    public Expression<Func<T, bool>>? CreateExpression<T>()
     {
         if (simpleCriterion == null)
-            return;
+            return null;
 
         var parameter = Expression.Parameter(typeof(T), "x");
         var property = Expression.Property(parameter, simpleCriterion.Property);
@@ -29,7 +29,7 @@ public class SimpleEqualsProvider(SimpleCriterion? simpleCriterion) : ICriterion
 
         Expression comparison = Expression.Equal(property, value);
 
-        var lambda = Expression.Lambda<Func<T, bool>>(comparison, parameter);
-        queryable = queryable.Where(lambda);
+        return Expression.Lambda<Func<T, bool>>(comparison, parameter);
     }
+
 }

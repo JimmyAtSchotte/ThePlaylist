@@ -1,5 +1,4 @@
-﻿using ThePlaylist.Core.Entitites;
-using ThePlaylist.Core.Specification;
+﻿using Ardalis.Specification;
 
 namespace ThePlaylist.Core.Interfaces;
 

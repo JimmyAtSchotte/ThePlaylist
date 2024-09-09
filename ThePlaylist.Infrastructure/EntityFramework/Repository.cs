@@ -1,11 +1,34 @@
-﻿using NHibernate.Linq;
+﻿using Ardalis.Specification;
+using Ardalis.Specification.EntityFrameworkCore;
 using ThePlaylist.Core.Interfaces;
-using ThePlaylist.Core.Specification;
+using ThePlaylist.Infrastructure.EntityFramework.Specification;
 
 namespace ThePlaylist.Infrastructure.EntityFramework;
 
-public class Repository(Context db) : IRepository
+public class Repository : IRepository
 {
+    private readonly Context db;
+    private readonly ISpecificationEvaluator _specificationEvaluator;
+    
+    public Repository(Context context)
+    {
+        db = context;
+        _specificationEvaluator = new SpecificationEvaluator(new IEvaluator[]
+        {
+            WhereEvaluator.Instance,
+            CriteraEvaluator.Instance,
+            Ardalis.Specification.EntityFrameworkCore.SearchEvaluator.Instance,
+            IncludeEvaluator.Default,
+            OrderEvaluator.Instance,
+            PaginationEvaluator.Instance,
+            AsNoTrackingEvaluator.Instance,
+            AsNoTrackingWithIdentityResolutionEvaluator.Instance,
+            AsTrackingEvaluator.Instance,
+            IgnoreQueryFiltersEvaluator.Instance,
+            AsSplitQueryEvaluator.Instance
+        });
+    }
+    
     public T Add<T>(T entity) where T : class
     {
         db.Add(entity);
@@ -39,6 +62,6 @@ public class Repository(Context db) : IRepository
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
-        return db.Set<T>().Query(specification);
+        return _specificationEvaluator.GetQuery(db.Set<T>().AsQueryable(), specification);
     }
 }

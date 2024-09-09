@@ -13,6 +13,7 @@ public class RepositorySqlExpressTests : BaseRepositoryTests
     {
         var optionsBuilder = new DbContextOptionsBuilder();
         optionsBuilder.UseSqlServer("Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test;Trusted_Connection=True;TrustServerCertificate=True;");
+        optionsBuilder.LogTo(Console.WriteLine);
         _repository = new Repository(new Context(optionsBuilder.Options));
     }
 

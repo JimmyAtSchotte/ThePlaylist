@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Ardalis.Specification;
+using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Core.Specification;
@@ -153,36 +154,46 @@ public abstract class BaseRepositoryTests
     public void SpecificationByName()
     {
         var rock = new Genre() { Name = "Rock" };
+        var pop = new Genre() { Name = "Pop" };
         Repository.Add(rock);
+        Repository.Add(pop);
 
-        var specification = Specifications.Genre.ByName(rock.Name).Build();
+
+        var specification = Specifications.Genre.ByName(rock.Name).Specification;
         var fetchedGenres = Repository.List(specification).ToList();
 
         fetchedGenres.Should().Contain(x => x.Id == rock.Id);
+        fetchedGenres.Should().NotContain(x => x.Id == pop.Id);
     }
     
     [Test]
     public void SpecificationExpression()
     {
         var rock = new Genre() { Name = "Rock" };
+        var pop = new Genre() { Name = "Pop" };
         Repository.Add(rock);
+        Repository.Add(pop);
 
-        var specification = Specifications.Genre.Where(x => x.Name == rock.Name).Build();
+        var specification = Specifications.Genre.Where(x => x.Name == rock.Name).Specification;
         var fetchedGenres = Repository.List(specification).ToList();
 
         fetchedGenres.Should().Contain(x => x.Id == rock.Id);
+        fetchedGenres.Should().NotContain(x => x.Id == pop.Id);
     }
     
     [Test]
     public void SpecificationCriteria()
     {
         var rock = new Genre() { Name = "Rock" };
+        var pop = new Genre() { Name = "Pop" };
         Repository.Add(rock);
+        Repository.Add(pop);
 
-        var specification = Specifications.Genre.Where(Restrictions.Eq("Name", rock.Name)).Build();
+        var specification = Specifications.Genre.Where(Restrictions.Eq("Name", rock.Name)).Specification;
         var fetchedGenres = Repository.List(specification).ToList();
 
         fetchedGenres.Should().Contain(x => x.Id == rock.Id);
+        fetchedGenres.Should().NotContain(x => x.Id == pop.Id);
     }
     
     
@@ -199,7 +210,7 @@ public abstract class BaseRepositoryTests
         Repository.Add(trackA);
         Repository.Add(trackB);
         
-        var specification = Specifications.Track.Build();
+        var specification = Specifications.Track.Include(x => x.Genres).Specification;
         var fetchedTracks = Repository.List(specification).ToList();
 
         fetchedTracks.Should().Contain(x => x.Id == trackA.Id);

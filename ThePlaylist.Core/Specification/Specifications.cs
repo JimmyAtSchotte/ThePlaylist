@@ -1,7 +1,11 @@
-﻿namespace ThePlaylist.Core.Specification;
+﻿using System.Runtime.CompilerServices;
+using Ardalis.Specification;
+using ThePlaylist.Core.Entitites;
+
+namespace ThePlaylist.Core.Specification;
 
 public static class Specifications
 {
-    public static SpecificationBuilder<Entitites.Genre> Genre => new SpecificationBuilder<Entitites.Genre>();
-    public static SpecificationBuilder<Entitites.Track> Track => new SpecificationBuilder<Entitites.Track>();
+    public static SpecificationBuilder<Genre> Genre => new (new GenericSpecification<Genre>());
+    public static SpecificationBuilder<Track> Track => new (new GenericSpecification<Track>());
 }

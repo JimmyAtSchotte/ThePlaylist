@@ -1,4 +1,5 @@
-﻿using ThePlaylist.Core.Specification.Criterion;
+﻿using Ardalis.Specification;
+using ThePlaylist.Core.Specification.Criterion;
 
 namespace ThePlaylist.Core.Specification.Common.Genre;
 
