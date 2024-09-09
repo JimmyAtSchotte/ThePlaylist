@@ -103,10 +103,10 @@ public abstract class BaseRepositoryTests
         var pop = new Genre() { Name = "Pop" };
         
         var trackA = new Track { Name = "Track A" };
-        trackA.Genres.Add(rock);
+        trackA.AddGenre(rock);
         
         var trackB = new Track { Name = "Track B" };
-        trackB.Genres.Add(pop);
+        trackB.AddGenre(pop);
 
         var playlistA = new Playlist { Name = "Playlist A" };
         var playlistB = new Playlist { Name = "Playlist B" };
@@ -183,5 +183,30 @@ public abstract class BaseRepositoryTests
         var fetchedGenres = Repository.List(specification).ToList();
 
         fetchedGenres.Should().Contain(x => x.Id == rock.Id);
+    }
+    
+    
+    [Test]
+    public void SpecificationIncludeGenres()
+    {
+        var trackA = new Track() { Name = "Track A" };
+        var rock = new Genre() { Name = "Rock" };
+        trackA.AddGenre(rock);
+        
+        var trackB = new Track() { Name = "Track B" };
+        trackB.AddGenre(rock);
+        
+        Repository.Add(trackA);
+        Repository.Add(trackB);
+        
+        var specification = Specifications.Track.Build();
+        var fetchedTracks = Repository.List(specification).ToList();
+
+        fetchedTracks.Should().Contain(x => x.Id == trackA.Id);
+        fetchedTracks.FirstOrDefault(x => x.Id == trackA.Id).Genres.Should().NotBeEmpty();
+        fetchedTracks.Should().Contain(x => x.Id == trackB.Id);
+        fetchedTracks.FirstOrDefault(x => x.Id == trackB.Id).Genres.Should().NotBeEmpty();
+
+        
     }
 }
