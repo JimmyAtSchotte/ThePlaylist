@@ -1,4 +1,4 @@
-namespace ThePlaylist.Specifications.Track;
+namespace ThePlaylist.Specifications.Track.Projections;
 
 public class TrackName
 {

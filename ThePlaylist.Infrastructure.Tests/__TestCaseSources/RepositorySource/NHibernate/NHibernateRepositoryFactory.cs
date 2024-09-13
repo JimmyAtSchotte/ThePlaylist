@@ -4,8 +4,9 @@ using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Infrastructure.NHibernate;
+using Repository = ThePlaylist.Infrastructure.NHibernate.Repository;
 
-namespace ThePlaylist.Infrastructure.Tests.NHibernate;
+namespace ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource.NHibernate;
 
 public class NHibernateRepositoryFactory
 {

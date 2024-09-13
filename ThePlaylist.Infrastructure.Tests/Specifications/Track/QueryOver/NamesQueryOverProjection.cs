@@ -1,13 +1,14 @@
 using FluentAssertions;
-using ThePlaylist.Specifications.Track;
+using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications.Track.QueryOver;
 
-namespace ThePlaylist.Infrastructure.Tests.NHibernate.Specifications.Track;
+namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.QueryOver;
 
 [TestFixture]
 public class NamesQueryOverProjection
 {
-    [TestCaseSource(typeof(NHibernateRepositorySources), nameof(NHibernateRepositorySources.RepositoryProviders))]
-    public void TrackNames(BaseNHibernateRepositorySource repositoryProvider)
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]
+    public void TrackNames(BaseRepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {

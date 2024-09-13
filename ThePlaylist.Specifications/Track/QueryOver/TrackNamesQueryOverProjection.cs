@@ -1,7 +1,8 @@
 using NHibernate.Criterion;
 using NHibernate.Transform;
+using ThePlaylist.Specifications.Track.Projections;
 
-namespace ThePlaylist.Specifications.Track;
+namespace ThePlaylist.Specifications.Track.QueryOver;
 
 public class TrackNamesQueryOverProjection : QueryOverSpecification<Core.Entitites.Track, TrackName>
 {
@@ -9,7 +10,7 @@ public class TrackNamesQueryOverProjection : QueryOverSpecification<Core.Entitit
     {
         this.UseQueryOver(queryOver => queryOver
             .SelectList(list => list
-                .Select(Projections.Property<Core.Entitites.Track>(x => x.Name).WithAlias(nameof(TrackName.Name))))
+                .Select(NHibernate.Criterion.Projections.Property<Core.Entitites.Track>(x => x.Name).WithAlias(nameof(TrackName.Name))))
             .TransformUsing(Transformers.AliasToBean<TrackName>()));
     }
 }

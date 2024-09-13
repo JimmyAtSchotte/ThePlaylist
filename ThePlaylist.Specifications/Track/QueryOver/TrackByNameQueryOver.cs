@@ -1,7 +1,4 @@
-using NHibernate.Criterion;
-using ThePlaylist.Specifications;
-
-namespace ThePlaylist.Specifications.Track;
+namespace ThePlaylist.Specifications.Track.QueryOver;
 
 public class TrackByNameQueryOver : QueryOverSpecification<Core.Entitites.Track>
 {

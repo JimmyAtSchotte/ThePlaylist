@@ -1,6 +1,6 @@
 using Ardalis.Specification;
 
-namespace ThePlaylist.Infrastructure.Tests.NHibernate.Specifications.Track;
+namespace ThePlaylist.Specifications.Track.Query;
 
 public class TrackByName : Specification<Core.Entitites.Track>
 {

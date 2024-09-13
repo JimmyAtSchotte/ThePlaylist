@@ -1,13 +1,14 @@
-﻿using System.Collections;
-using FluentAssertions;
+﻿using FluentAssertions;
+using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications.Track.Query;
 
-namespace ThePlaylist.Infrastructure.Tests.NHibernate.Specifications.Track;
+namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.Query;
 
 [TestFixture]
 public class ByName
 {
-    [TestCaseSource(typeof(NHibernateRepositorySources), nameof(NHibernateRepositorySources.RepositoryProviders))]
-    public void FindTrackByName(BaseNHibernateRepositorySource repositoryProvider)
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void FindTrackByName(BaseRepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {

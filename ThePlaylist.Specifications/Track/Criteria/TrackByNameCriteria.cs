@@ -1,7 +1,6 @@
 using NHibernate.Criterion;
-using ThePlaylist.Specifications;
 
-namespace ThePlaylist.Specifications.Track;
+namespace ThePlaylist.Specifications.Track.Criteria;
 
 public class TrackByNameCriteria : CriteriaSpecification<Core.Entitites.Track>
 {
