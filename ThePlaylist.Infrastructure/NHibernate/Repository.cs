@@ -1,10 +1,12 @@
 ﻿using Ardalis.Specification;
-using Ardalis.Specification.EntityFrameworkCore;
 using NHibernate;
 using NHibernate.Criterion;
+using NHibernate.Transform;
+using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Core.Specification;
-using ThePlaylist.Infrastructure.NHibernate.Specification;
+using ThePlaylist.Specifications;
+using ThePlaylist.Specifications.Track;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
@@ -61,22 +63,42 @@ public class Repository : IRepository
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
-        if (specification.HasCriteria())
+        return specification switch
         {
-            var criteria = specification.Criteria();
-            var query = _session.CreateCriteria<T>();
-            var criteriaStrategy = new CriterionStrategy(new ICriterionFactory[]
-            {
-                new SimpleEqualsFactory()
-            });
+            CriteriaSpecification<T> criteriaSpecification => 
+                _session.CreateCriteria<T>()
+                    .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
+                    .List<T>(),
 
-            foreach (var criterion in criteria)
-                criteriaStrategy.Apply(query, criterion);
+            QueryOverSpecification<T> queryOverSpecification => 
+                _session.QueryOver<T>()
+                    .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
+                    .List<T>(),
+
+            _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification)
+        };
+    }
+    
+    public IEnumerable<TResult> List<T, TResult>(ISpecification<T, TResult> specification) where T : class
+    {
+        return specification switch
+        {
+            CriteriaSpecification<T, TResult> criteriaSpecification => 
+                _session.CreateCriteria<T>()
+                    .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
+                    .List<TResult>(),
+
+            QueryOverSpecification<T, TResult> queryOverSpecification =>
+                _session.QueryOver<T>()
+                    .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
+                    .List<TResult>(),
             
-            return query.List<T>();
-        }
-        
-        return _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification);
+            _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification)
+        };
+    }
 
+    public void Dispose()
+    {
+        _session.Dispose();
     }
 }

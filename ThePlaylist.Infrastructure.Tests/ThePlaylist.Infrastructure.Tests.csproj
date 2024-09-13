@@ -23,6 +23,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ThePlaylist.Core\ThePlaylist.Core.csproj" />
       <ProjectReference Include="..\ThePlaylist.Infrastructure\ThePlaylist.Infrastructure.csproj" />
+      <ProjectReference Include="..\ThePlaylist.Specifications\ThePlaylist.Specifications.csproj" />
     </ItemGroup>
 
 </Project>

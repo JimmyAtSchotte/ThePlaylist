@@ -1,11 +1,10 @@
 ﻿using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
 using ThePlaylist.Core.Interfaces;
-using ThePlaylist.Infrastructure.EntityFramework.Specification;
 
 namespace ThePlaylist.Infrastructure.EntityFramework;
 
-public class Repository : IRepository
+public class Repository : IRepository, IAsyncDisposable
 {
     private readonly Context db;
     private readonly ISpecificationEvaluator _specificationEvaluator;
@@ -16,7 +15,6 @@ public class Repository : IRepository
         _specificationEvaluator = new SpecificationEvaluator(new IEvaluator[]
         {
             WhereEvaluator.Instance,
-            CriteraEvaluator.Instance,
             Ardalis.Specification.EntityFrameworkCore.SearchEvaluator.Instance,
             IncludeEvaluator.Default,
             OrderEvaluator.Instance,
@@ -63,5 +61,20 @@ public class Repository : IRepository
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
         return _specificationEvaluator.GetQuery(db.Set<T>().AsQueryable(), specification);
+    }
+
+    public IEnumerable<TResult> List<T, TResult>(ISpecification<T, TResult> specification) where T : class
+    {
+        return _specificationEvaluator.GetQuery(db.Set<T>().AsQueryable(), specification);
+    }
+
+    public void Dispose()
+    {
+        db.Dispose();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await db.DisposeAsync();
     }
 }
