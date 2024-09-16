@@ -37,3 +37,4 @@ public class AllTracksAllGenresTest
         fetchedPlaylist.Tracks.SelectMany(x => x.Genres).Should().HaveCount(1);
     }
 }
+
