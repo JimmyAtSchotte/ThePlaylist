@@ -3,11 +3,11 @@ using ThePlaylist.Infrastructure.NHibernate.Evaluators;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
-public class LinqQuerySpecificationEvaluator : ISpecificationEvaluator
+public class LinqToQuerySpecificationEvaluator : ISpecificationEvaluator
 {
     private List<IEvaluator> Evaluators { get; } = new List<IEvaluator>();
     
-    public LinqQuerySpecificationEvaluator()
+    public LinqToQuerySpecificationEvaluator()
     {
         Evaluators.AddRange(new IEvaluator[]
         {

@@ -19,7 +19,7 @@ public class Repository : IRepository
     public Repository(ISession session)
     {
         _session = session;
-        _specificationEvaluator = new LinqQuerySpecificationEvaluator();
+        _specificationEvaluator = new LinqToQuerySpecificationEvaluator();
     }
     
     public T Add<T>(T entity) where T : class
