@@ -5,7 +5,6 @@ using NHibernate.Linq;
 using NHibernate.Transform;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
-using ThePlaylist.Core.Specification;
 using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Track;
 
