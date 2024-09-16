@@ -1,27 +1,33 @@
+using System.Collections;
+
 namespace ThePlaylist.Core.Entitites;
 
 public class Track
 {
-    private IList<Genre> _genres = new List<Genre>();
+    private IEnumerable<Genre> _genres = new List<Genre>();
     private IEnumerable<Playlist> _playlists = new List<Playlist>();
     public virtual Guid Id { get;  set; }
     public virtual string Name { get;  set; }
 
-    public virtual IList<Genre> Genres
+    public virtual IEnumerable<Genre> Genres
     {
         get => _genres;
-        set => _genres = value;
+        init => _genres = value;
     }
 
     public virtual IEnumerable<Playlist> Playlists
     {
         get => _playlists;
-        set => _playlists = value;
+        init => _playlists = value;
     }
 
-    public virtual void AddGenre(Genre rock)
+    public virtual Genre AddGenre(Genre genre)
     {
-        _genres.Add(rock);
+        var genres = _genres.ToList();
+        genres.Add(genre);
+
+        _genres = genres;
         
+        return genre;
     }
 }

@@ -2,7 +2,7 @@ namespace ThePlaylist.Core.Entitites;
 
 public class Genre
 {
-    private IList<Genre> _subGenres = new List<Genre>();
+    private IEnumerable<Genre> _subGenres = new List<Genre>();
     private IEnumerable<Track> _tracks = new List<Track>();
     public virtual Guid Id { get; set; }
     public virtual string Name { get;  set; }
@@ -10,19 +10,21 @@ public class Genre
 
     public virtual IEnumerable<Genre> SubGenres
     {
-        get => _subGenres.AsReadOnly();
-        set => _subGenres = value.ToList();
+        get => _subGenres;
+        init => _subGenres = value;
     }
 
     public virtual IEnumerable<Track> Tracks
     {
         get => _tracks;
-        set => _tracks = value;
+        init => _tracks = value;
     }
 
     public virtual void AddSubGenre(Genre genre)
     {
-        _subGenres.Add(genre);
+        var subGenres = _subGenres.ToList();
+        subGenres.Add(genre);
+        _subGenres = subGenres;
         genre.Parent = this;
     }
 }

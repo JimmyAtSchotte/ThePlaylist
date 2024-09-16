@@ -16,7 +16,7 @@ public class TrackMapping : ClassMapping<Track>
             map.Length(255);
         });
         
-        Bag(x => x.Playlists, map =>
+        Set(x => x.Playlists, map =>
         {
             map.Table("PlaylistTracks");
             map.Key(x => x.Column("TrackId"));
@@ -25,7 +25,7 @@ public class TrackMapping : ClassMapping<Track>
         }, rel => rel.ManyToMany(x => x.Column("PlaylistId")));
         
         
-        Bag(x => x.Genres, map =>
+        Set(x => x.Genres, map =>
         {
             map.Table("TrackGenres");
             map.Key(x => x.Column("TrackId"));

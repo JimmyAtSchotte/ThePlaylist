@@ -2,7 +2,7 @@
 
 namespace ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 
-public abstract class BaseRepositorySource(Func<IRepository> repositoryProvider)
+public abstract class RepositorySource(Func<IRepository> repositoryProvider)
 {
     public IRepository CreateRepository() => repositoryProvider() ;
     

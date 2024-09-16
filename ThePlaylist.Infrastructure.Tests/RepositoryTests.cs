@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.Tests;
 public class RepositoryTests
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void AddEntity(BaseRepositorySource repositoryProvider)
+    public void AddEntity(RepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -23,7 +23,7 @@ public class RepositoryTests
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void ListEntities(BaseRepositorySource repositoryProvider)
+    public void ListEntities(RepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -39,7 +39,7 @@ public class RepositoryTests
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void DeleteEntity(BaseRepositorySource repositoryProvider)
+    public void DeleteEntity(RepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -57,7 +57,7 @@ public class RepositoryTests
     
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void UpdateEntity(BaseRepositorySource repositoryProvider)
+    public void UpdateEntity(RepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -77,7 +77,7 @@ public class RepositoryTests
     
    
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void GetEntity(BaseRepositorySource repositoryProvider)
+    public void GetEntity(RepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -93,7 +93,7 @@ public class RepositoryTests
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void ManyToManyRelationship(BaseRepositorySource repositoryProvider)
+    public void ManyToManyRelationship(RepositorySource repositoryProvider)
     {
         var rock = new Genre() { Name = "Rock" };
         var pop = new Genre() { Name = "Pop" };
@@ -134,7 +134,7 @@ public class RepositoryTests
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void SelfReferencingRelationship(BaseRepositorySource repositoryProvider)
+    public void SelfReferencingRelationship(RepositorySource repositoryProvider)
     {
         var rock = new Genre() { Name = "Rock" };
         var metal = new Genre() { Name = "metal" };

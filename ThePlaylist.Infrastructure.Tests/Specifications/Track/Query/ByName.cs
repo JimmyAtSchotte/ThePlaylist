@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.Query;
 public class ByName
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void FindTrackByName(BaseRepositorySource repositoryProvider)
+    public void FindTrackByName(RepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {

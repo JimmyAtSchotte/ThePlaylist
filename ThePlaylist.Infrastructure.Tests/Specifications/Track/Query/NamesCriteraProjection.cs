@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.Query;
 public class NamesCriteriaProjection
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]
-    public void TrackNames(BaseRepositorySource repositoryProvider)
+    public void TrackNames(RepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {

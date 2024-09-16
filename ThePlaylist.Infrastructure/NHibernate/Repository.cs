@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using NHibernate;
 using NHibernate.Criterion;
+using NHibernate.Linq;
 using NHibernate.Transform;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
@@ -63,6 +64,10 @@ public class Repository : IRepository
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
+       // var s1 = _session.Query<Playlist>().ToList();
+        var s2 = _session.Query<Playlist>().FetchMany(x => x.Tracks).ToList();
+        var s3 = _session.Query<Playlist>().FetchMany(x => x.Tracks).ThenFetchMany(x => x.Genres).ToList();
+        //
         return specification switch
         {
             CriteriaSpecification<T> criteriaSpecification => 
@@ -75,12 +80,13 @@ public class Repository : IRepository
                     .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
                     .List<T>(),
 
-            _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification)
+            _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification).ToList()
         };
     }
     
     public IEnumerable<TResult> List<T, TResult>(ISpecification<T, TResult> specification) where T : class
     {
+    
         return specification switch
         {
             CriteriaSpecification<T, TResult> criteriaSpecification => 
@@ -93,7 +99,7 @@ public class Repository : IRepository
                     .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
                     .List<TResult>(),
             
-            _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification)
+            _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification).ToList()
         };
     }
 

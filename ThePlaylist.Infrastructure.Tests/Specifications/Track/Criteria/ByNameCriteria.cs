@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.Criteria;
 public class ByNameCriteria
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]
-    public void FindTrackByName(BaseRepositorySource repositoryProvider)
+    public void FindTrackByName(RepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {

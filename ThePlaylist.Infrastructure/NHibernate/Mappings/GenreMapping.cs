@@ -16,7 +16,7 @@ public class GenreMapping : ClassMapping<Genre>
             map.Length(255);
         });
         
-        Bag(x => x.Tracks, map =>
+        Set(x => x.Tracks, map =>
         {
             map.Table("TrackGenres");
             map.Key(x => x.Column("GenreId"));
@@ -31,7 +31,7 @@ public class GenreMapping : ClassMapping<Genre>
             map.Cascade(Cascade.None);
         });
 
-        Bag(x => x.SubGenres, map =>
+        Set(x => x.SubGenres, map =>
         {
             map.Key(k => k.Column("ParentGenreId"));
             map.Inverse(true);

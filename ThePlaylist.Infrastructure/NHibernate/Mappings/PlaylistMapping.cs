@@ -19,7 +19,7 @@ public class PlaylistMapping : ClassMapping<Playlist>
         {
             map.Length(1024);
         });
-        Bag(x => x.Tracks, map =>
+        Set(x => x.Tracks, map =>
         {
             map.Table("PlaylistTracks");
             map.Key(x => x.Column("PlaylistId"));
