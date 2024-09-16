@@ -64,10 +64,6 @@ public class Repository : IRepository
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
-       // var s1 = _session.Query<Playlist>().ToList();
-        var s2 = _session.Query<Playlist>().FetchMany(x => x.Tracks).ToList();
-        var s3 = _session.Query<Playlist>().FetchMany(x => x.Tracks).ThenFetchMany(x => x.Genres).ToList();
-        //
         return specification switch
         {
             CriteriaSpecification<T> criteriaSpecification => 
