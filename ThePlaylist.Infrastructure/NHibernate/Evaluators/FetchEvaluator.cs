@@ -81,9 +81,7 @@ public class FetchEvaluator : IEvaluator
     
     private static bool IsGenericEnumerable(Type type, out Type propertyType)
     {
-        if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(IEnumerable<>) || 
-                                   type.GetGenericTypeDefinition() == typeof(ISet<>) ||
-                                   type.GetGenericTypeDefinition() == typeof(ICollection<>)))
+        if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(IEnumerable<>)))
         {
             propertyType = type.GenericTypeArguments[0];
 
