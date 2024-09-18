@@ -38,5 +38,6 @@ public class GenreMapping : ClassMapping<Genre>
             map.Cascade(Cascade.All.Include(Cascade.DeleteOrphans));
         }, map => map.OneToMany());
         
+        Lazy(false);
     }
 }

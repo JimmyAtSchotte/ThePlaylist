@@ -32,6 +32,7 @@ public class TrackMapping : ClassMapping<Track>
             map.Cascade(Cascade.All);
         }, rel => rel.ManyToMany(x => x.Column("GenreId")));
         
+        Lazy(false);
     }
 }
 

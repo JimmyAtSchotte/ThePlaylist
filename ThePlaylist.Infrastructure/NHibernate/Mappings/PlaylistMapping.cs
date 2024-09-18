@@ -25,5 +25,8 @@ public class PlaylistMapping : ClassMapping<Playlist>
             map.Key(x => x.Column("PlaylistId"));
             map.Cascade(Cascade.All);
         }, rel => rel.ManyToMany(x => x.Column("TrackId")));
+        
+        Lazy(false);
+
     }
 }
