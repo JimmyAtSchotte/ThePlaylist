@@ -5,6 +5,7 @@ using NHibernate.Connection;
 using NHibernate.Dialect;
 using NHibernate.Driver;
 using NHibernate.Tool.hbm2ddl;
+using ThePlaylist.Core.Projections;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
@@ -34,7 +35,9 @@ public class NHibernateConfiguration(IServiceCollection services)
                 db.LogFormattedSql = true;
             });
             
-            configuration.AddMappingsFromAssembly(typeof(INamespacePlaceholder).Assembly);
+            configuration.AddMappingsFromAssembly(typeof(IAmMappingsNamespace).Assembly);
+            configuration.AddProjectionsFromAssemblyNamespace(typeof(IAmProjectionsNamespace).Assembly, typeof(IAmProjectionsNamespace).Namespace);
+            
     
             return configuration;
         });
@@ -57,7 +60,8 @@ public class NHibernateConfiguration(IServiceCollection services)
                 db.LogSqlInConsole = true;
             });
             
-            configuration.AddMappingsFromAssembly(typeof(INamespacePlaceholder).Assembly);
+            configuration.AddMappingsFromAssembly(typeof(IAmMappingsNamespace).Assembly);
+            configuration.AddProjectionsFromAssemblyNamespace(typeof(IAmProjectionsNamespace).Assembly, typeof(IAmProjectionsNamespace).Namespace);
     
             return configuration;
         });

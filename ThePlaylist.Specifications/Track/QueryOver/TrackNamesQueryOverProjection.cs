@@ -1,6 +1,6 @@
 using NHibernate.Criterion;
 using NHibernate.Transform;
-using ThePlaylist.Specifications.Track.Projections;
+using ThePlaylist.Core.Projections;
 
 namespace ThePlaylist.Specifications.Track.QueryOver;
 

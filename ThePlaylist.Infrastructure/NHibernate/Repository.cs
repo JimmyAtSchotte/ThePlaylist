@@ -1,12 +1,7 @@
 ﻿using Ardalis.Specification;
 using NHibernate;
-using NHibernate.Criterion;
-using NHibernate.Linq;
-using NHibernate.Transform;
-using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Specifications;
-using ThePlaylist.Specifications.Track;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
@@ -74,6 +69,10 @@ public class Repository : IRepository
                 _session.QueryOver<T>()
                     .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
                     .List<T>(),
+            
+            HqlSpecification<T> hqlSpecification => 
+                _session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
+                    .List<T>(),
 
             _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification).ToList()
         };
@@ -92,6 +91,10 @@ public class Repository : IRepository
             QueryOverSpecification<T, TResult> queryOverSpecification =>
                 _session.QueryOver<T>()
                     .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
+                    .List<TResult>(),
+            
+            HqlSpecification<T, TResult> hqlSpecification => 
+                _session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
                     .List<TResult>(),
             
             _ => _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification).ToList()

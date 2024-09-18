@@ -1,6 +1,6 @@
 ﻿namespace ThePlaylist.Infrastructure.NHibernate;
 
-public interface INamespacePlaceholder
+public interface IAmMappingsNamespace
 {
     
 }
