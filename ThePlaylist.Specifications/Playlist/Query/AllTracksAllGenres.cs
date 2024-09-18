@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 
-namespace ThePlaylist.Specifications.Playlist;
+namespace ThePlaylist.Specifications.Playlist.Query;
 
 public sealed class AllTracksAllGenres : Specification<Core.Entitites.Playlist>
 {
