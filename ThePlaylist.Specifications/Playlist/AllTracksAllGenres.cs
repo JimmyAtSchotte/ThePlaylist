@@ -2,16 +2,11 @@
 
 namespace ThePlaylist.Specifications.Playlist;
 
-public class AllTracksAllGenres : Specification<Core.Entitites.Playlist>
+public sealed class AllTracksAllGenres : Specification<Core.Entitites.Playlist>
 {
     public AllTracksAllGenres()
     {
         Query.Include(x => x.Tracks).ThenInclude(x => x.Genres);
     }
     
-}
-
-public class PlaylistName
-{
-    public string Name { get; set; }
 }

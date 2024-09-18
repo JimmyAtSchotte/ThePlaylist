@@ -2,7 +2,7 @@ using Ardalis.Specification;
 
 namespace ThePlaylist.Specifications.Track.Query;
 
-public class TrackByName : Specification<Core.Entitites.Track>
+public sealed class TrackByName : Specification<Core.Entitites.Track>
 {
     public TrackByName(string trackName)
     {
