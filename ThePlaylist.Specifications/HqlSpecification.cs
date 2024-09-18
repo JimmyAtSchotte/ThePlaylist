@@ -3,16 +3,12 @@ using NHibernate;
 
 namespace ThePlaylist.Specifications;
 
-public class HqlSpecification<T> : Specification<T>
-{
-    private Func<ISession, IQuery>? _action;
-    public Func<ISession, IQuery> GetHql() => _action ?? throw new NotSupportedException("The hql has not been specified. Please use UseHql() to define the hql.");
-    protected void UseHql(Func<ISession, IQuery> action) => _action = action;
+public abstract class HqlSpecification<T>(Func<ISession, IQuery> action) : Specification<T>
+{ 
+    public Func<ISession, IQuery> GetHql() => action;
 }
 
-public class HqlSpecification<T, TResult> : Specification<T, TResult>
+public abstract class HqlSpecification<T, TResult>(Func<ISession, IQuery> action) : Specification<T, TResult>
 {
-    private Func<ISession, IQuery>? _action;
-    public Func<ISession, IQuery> GetHql() => _action ?? throw new NotSupportedException("The hql has not been specified. Please use UseHql() to define the hql.");
-    protected void UseHql(Func<ISession, IQuery> action) => _action = action;
+    public Func<ISession, IQuery> GetHql() => action;
 }

@@ -3,16 +3,13 @@ using NHibernate;
 
 namespace ThePlaylist.Specifications;
 
-public class QueryOverSpecification<T> : Specification<T>
+public abstract class QueryOverSpecification<T>(Action<IQueryOver<T, T>> action) : Specification<T>
 {
-    private Action<IQueryOver<T, T>>? _action;
-    public Action<IQueryOver<T, T>> GetQueryOver() => _action ?? throw new NotSupportedException("The Query over has not been specified. Please use the UseQueryOver() to define the query over.");
-    protected void UseQueryOver(Action<IQueryOver<T, T>> action) => _action = action;
+    public Action<IQueryOver<T, T>> GetQueryOver() => action;
 }
 
-public class QueryOverSpecification<T, TResult> : Specification<T, TResult>
+public abstract class QueryOverSpecification<T, TResult>(Func<IQueryOver<T, T>, IQueryOver<T, T>> action)
+    : Specification<T, TResult>
 {
-    private Func<IQueryOver<T, T>, IQueryOver<T, T>>? _action;
-    public Func<IQueryOver<T, T>, IQueryOver<T, T>> GetQueryOver() => _action ??  throw new NotSupportedException("The Query over has not been specified. Please use the UseQueryOver() to define the query over.");
-    protected void UseQueryOver(Func<IQueryOver<T, T>, IQueryOver<T, T>> action) => _action = action;
+    public Func<IQueryOver<T, T>, IQueryOver<T, T>> GetQueryOver() => action;
 }
