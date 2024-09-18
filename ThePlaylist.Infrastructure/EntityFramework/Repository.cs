@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
 using ThePlaylist.Core.Interfaces;
+using ThePlaylist.Infrastructure.Exceptions;
 
 namespace ThePlaylist.Infrastructure.EntityFramework;
 
@@ -55,12 +56,22 @@ public class Repository : IRepository, IAsyncDisposable
 
     public T Get<T>(object id) where T : class
     {
-        return db.Set<T>().Find(id);
+        var entity = db.Set<T>().Find(id);
+
+        if (entity is null)
+            throw new EntityNotFoundException();
+
+        return entity;
     }
 
-    public T? Get<T>(ISpecification<T> specification) where T : class
+    public T Get<T>(ISpecification<T> specification) where T : class
     {
-        return _specificationEvaluator.GetQuery(db.Set<T>().AsQueryable(), specification).FirstOrDefault();
+        var entity = _specificationEvaluator.GetQuery(db.Set<T>().AsQueryable(), specification).FirstOrDefault();
+
+        if (entity is null)
+            throw new EntityNotFoundException();
+
+        return entity;
     }
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class

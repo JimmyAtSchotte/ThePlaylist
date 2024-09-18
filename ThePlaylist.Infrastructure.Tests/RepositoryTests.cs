@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using FluentAssertions;
 using ThePlaylist.Core.Entitites;
+using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Track.Query;
@@ -94,6 +95,15 @@ public class RepositoryTests
         var result = repository.Get<Playlist>(playlist.Id);
         result.Should().NotBeNull();
     }
+
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void EntityNotFound(RepositorySource repositoryProvider)
+    {
+        using var repository = repositoryProvider.CreateRepository();
+
+        repository.Invoking(r => r.Get<Playlist>(Guid.NewGuid())).Should().Throw<EntityNotFoundException>();
+
+    }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
     public void ManyToManyRelationship(RepositorySource repositoryProvider)
@@ -160,17 +170,8 @@ public class RepositoryTests
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(trackA);
 
-        try
-        {
-            repository.Add(trackB);
-        }
-        catch (Exception e)
-        {
-            // ignored
-        }
-
-        var fetchedTrack = repository.Get(new TrackByName(trackB.Name));
-        fetchedTrack.Should().BeNull();
+        repository.Invoking(r => r.Add(trackB)).Should().Throw<Exception>();
+        repository.Invoking(r => r.Get(new TrackByName(trackB.Name))).Should().Throw<EntityNotFoundException>();
     }
 
 

@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using NHibernate;
 using ThePlaylist.Core.Interfaces;
+using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Specifications;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
@@ -77,12 +78,22 @@ public class Repository : IRepository
     
     public T Get<T>(object id) where T : class
     {
-        return _session.Get<T>(id);
+        var entity = _session.Get<T>(id);
+
+        if (entity is null)
+            throw new EntityNotFoundException();
+
+        return entity;
     }
 
-    public T? Get<T>(ISpecification<T> specification) where T : class
+    public T Get<T>(ISpecification<T> specification) where T : class
     {
-        return _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification).ToList().FirstOrDefault();
+       var entity = _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification).ToList().FirstOrDefault();
+
+       if (entity is null)
+           throw new EntityNotFoundException();
+
+       return entity;
     }
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
