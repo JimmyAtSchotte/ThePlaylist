@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.NHibernate;
 
 public class Repository(ISession session) : IRepository
 {
-    private readonly LinqToQuerySpecificationEvaluator _specificationEvaluator = new ();
+    private readonly LinqToQuerySpecificationEvaluator _specificationEvaluator = LinqToQuerySpecificationEvaluator.Default;
 
     public T Add<T>(T entity) where T : class
     {

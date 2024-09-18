@@ -7,6 +7,8 @@ public class LinqToQuerySpecificationEvaluator : ISpecificationEvaluator
 {
     private List<IEvaluator> Evaluators { get; } = new List<IEvaluator>();
     
+    public static LinqToQuerySpecificationEvaluator Default { get; } = new ();
+    
     public LinqToQuerySpecificationEvaluator()
     {
         Evaluators.AddRange(new IEvaluator[]
