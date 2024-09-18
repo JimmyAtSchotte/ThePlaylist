@@ -20,9 +20,8 @@ public class Repository : IRepository
     {
         using var transaction = _session.BeginTransaction();
         _session.Save(entity);
+        _session.Flush();
         transaction.Commit();
-        
-        _session.Clear();
         
         return entity;
     }
@@ -36,17 +35,16 @@ public class Repository : IRepository
     {
         using var transaction = _session.BeginTransaction();
         _session.Delete(entity);
+        _session.Flush();
         transaction.Commit();
-        _session.Clear();
     }
     
     public T Update<T>(T entity) where T : class
     {
         using var transaction = _session.BeginTransaction();
         _session.Update(entity);
+        _session.Flush();
         transaction.Commit();
-        
-        _session.Clear();
         
         return entity;
     }
@@ -54,6 +52,11 @@ public class Repository : IRepository
     public T Get<T>(object id) where T : class
     {
         return _session.Get<T>(id);
+    }
+
+    public T? Get<T>(ISpecification<T> specification) where T : class
+    {
+        return _specificationEvaluator.GetQuery(_session.Query<T>().AsQueryable(), specification).ToList().FirstOrDefault();
     }
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class

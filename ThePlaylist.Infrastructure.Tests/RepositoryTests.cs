@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+﻿using Ardalis.Specification;
+using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 
 namespace ThePlaylist.Infrastructure.Tests;
 
@@ -106,31 +108,28 @@ public class RepositoryTests
 
         var playlistA = new Playlist { Name = "Playlist A" };
         var playlistB = new Playlist { Name = "Playlist B" };
-
+        
+        using var repository = repositoryProvider.CreateRepository();
         playlistA.AddTrack(trackA);
         playlistA.AddTrack(trackB);
-    
+        repository.Add(playlistA);
+
         playlistB.AddTrack(trackA);
         playlistB.AddTrack(trackB);
-
-        using var repository = repositoryProvider.CreateRepository();
-        repository.Add(playlistA);
         repository.Add(playlistB);
         
-        var fetchedPlaylistA = repository.Get<Playlist>(playlistA.Id);
-        var fetchedPlaylistB = repository.Get<Playlist>(playlistB.Id);
-    
+        var fetchedPlaylistA = repository.Get(new ById<Playlist>(playlistA.Id, specification => specification.Include(x => x.Tracks)));
+        var fetchedPlaylistB = repository.Get(new ById<Playlist>(playlistB.Id, specification => specification.Include(x => x.Tracks)));
+        var fetchedTrackA = repository.Get(new ById<Track>(trackA.Id, specification => specification.Include(x => x.Playlists).Include(x => x.Genres)));
+        var fetchedTrackB = repository.Get(new ById<Track>(trackB.Id, specification => specification.Include(x => x.Playlists).Include(x => x.Genres)));
+        
         fetchedPlaylistA.Tracks.Should().HaveCount(2);
         fetchedPlaylistB.Tracks.Should().HaveCount(2);
-
-        var fetchedTrackA = repository.Get<Track>(trackA.Id);
-        var fetchedTrackB = repository.Get<Track>(trackB.Id);
-
+        fetchedTrackA.Genres.Should().Contain(x => x.Id == rock.Id);
+        fetchedTrackB.Genres.Should().Contain(x => x.Id == pop.Id);
         fetchedTrackA.Playlists.Should().HaveCount(2);
         fetchedTrackB.Playlists.Should().HaveCount(2);
-        
-        fetchedTrackA.Genres.Should().HaveCount(1);
-        fetchedTrackB.Genres.Should().HaveCount(1);
+       
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]

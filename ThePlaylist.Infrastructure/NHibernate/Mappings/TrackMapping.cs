@@ -29,9 +29,9 @@ public class TrackMapping : ClassMapping<Track>
         {
             map.Table("TrackGenres");
             map.Key(x => x.Column("TrackId"));
-            map.Inverse(false);
             map.Cascade(Cascade.All);
         }, rel => rel.ManyToMany(x => x.Column("GenreId")));
+        
     }
 }
 

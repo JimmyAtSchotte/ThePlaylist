@@ -58,6 +58,11 @@ public class Repository : IRepository, IAsyncDisposable
         return db.Set<T>().Find(id);
     }
 
+    public T? Get<T>(ISpecification<T> specification) where T : class
+    {
+        return _specificationEvaluator.GetQuery(db.Set<T>().AsQueryable(), specification).FirstOrDefault();
+    }
+
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
         return _specificationEvaluator.GetQuery(db.Set<T>().AsQueryable(), specification);

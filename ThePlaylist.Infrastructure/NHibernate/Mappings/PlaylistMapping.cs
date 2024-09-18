@@ -23,7 +23,6 @@ public class PlaylistMapping : ClassMapping<Playlist>
         {
             map.Table("PlaylistTracks");
             map.Key(x => x.Column("PlaylistId"));
-            map.Inverse(false);
             map.Cascade(Cascade.All);
         }, rel => rel.ManyToMany(x => x.Column("TrackId")));
     }

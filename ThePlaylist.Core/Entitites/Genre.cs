@@ -1,6 +1,6 @@
 namespace ThePlaylist.Core.Entitites;
 
-public class Genre
+public class Genre : IEntity
 {
     private IEnumerable<Genre> _subGenres = new List<Genre>();
     private IEnumerable<Track> _tracks = new List<Track>();

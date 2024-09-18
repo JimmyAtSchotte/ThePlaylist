@@ -1,8 +1,9 @@
 ﻿using System.Collections;
+using System.Diagnostics.Contracts;
 
 namespace ThePlaylist.Core.Entitites;
 
-public class Playlist
+public class Playlist : IEntity
 {
     private IEnumerable<Track> _tracks = new List<Track>();
     
@@ -20,6 +21,7 @@ public class Playlist
     {
         var tracks = _tracks.ToList();
         tracks.Add(track);
+        track.AddPlaylist(this);
         _tracks = tracks;
         
         return track;

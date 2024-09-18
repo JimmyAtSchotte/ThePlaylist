@@ -22,6 +22,7 @@ public class NHibernateRepositoryFactory
         var session = services.GetRequiredService<ISession>();
         
         new SchemaExport(configuration).Execute(true, true, false, session.Connection, null);
+        
         return new Repository(session);
     }
 
@@ -35,6 +36,8 @@ public class NHibernateRepositoryFactory
         var session = services.GetRequiredService<ISession>();
         
         new SchemaExport(configuration).Execute(true, true, false, session.Connection, null);
+        
         return new Repository(session);
+        
     }
 }

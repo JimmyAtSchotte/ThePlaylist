@@ -2,7 +2,7 @@ using System.Collections;
 
 namespace ThePlaylist.Core.Entitites;
 
-public class Track
+public class Track : IEntity
 {
     private IEnumerable<Genre> _genres = new List<Genre>();
     private IEnumerable<Playlist> _playlists = new List<Playlist>();
@@ -29,5 +29,12 @@ public class Track
         _genres = genres;
         
         return genre;
+    }
+    
+    protected internal virtual void AddPlaylist(Playlist playlist)
+    {
+        var playlists = _playlists.ToList();
+        playlists.Add(playlist);
+        _playlists = playlists;
     }
 }
