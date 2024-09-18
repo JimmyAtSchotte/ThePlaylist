@@ -26,7 +26,7 @@ public class AllTracksAllGenresTest
             Name = "TestTrack",
         });
         
-        track.AddGenre(new Genre(){Name = "Pop"});
+        track.AddGenre(new Genre(){Name = Guid.NewGuid().ToString()});
 
         using var repository = repositorySource.CreateRepository();
         repository.Add(playlist);

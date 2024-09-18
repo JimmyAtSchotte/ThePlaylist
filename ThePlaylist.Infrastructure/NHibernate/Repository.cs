@@ -19,10 +19,19 @@ public class Repository : IRepository
     public T Add<T>(T entity) where T : class
     {
         using var transaction = _session.BeginTransaction();
-        _session.Save(entity);
-        _session.Flush();
-        transaction.Commit();
-        
+
+        try
+        {
+            _session.Save(entity);
+            _session.Flush();
+            transaction.Commit();
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
+
         return entity;
     }
 
@@ -34,17 +43,34 @@ public class Repository : IRepository
     public void Delete<T>(T entity) where T : class
     {
         using var transaction = _session.BeginTransaction();
-        _session.Delete(entity);
-        _session.Flush();
-        transaction.Commit();
+        try
+        {
+            _session.Delete(entity);
+            _session.Flush();
+            transaction.Commit();
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
     }
     
     public T Update<T>(T entity) where T : class
     {
         using var transaction = _session.BeginTransaction();
-        _session.Update(entity);
-        _session.Flush();
-        transaction.Commit();
+        
+        try
+        {
+            _session.Update(entity);
+            _session.Flush();
+            transaction.Commit();
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
         
         return entity;
     }

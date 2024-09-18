@@ -92,6 +92,9 @@ public class Context(DbContextOptions options) : DbContext(options)
                 .IsRequired()
                 .HasMaxLength(255);
 
+            builder.HasIndex(x => x.Name)
+                .IsUnique();
+
             builder.HasMany(x => x.Tracks)
                 .WithMany(x => x.Genres)
                 .UsingEntity<Dictionary<string, object>>(

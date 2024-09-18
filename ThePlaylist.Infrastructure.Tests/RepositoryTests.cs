@@ -3,6 +3,7 @@ using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 using ThePlaylist.Specifications;
+using ThePlaylist.Specifications.Track.Query;
 
 namespace ThePlaylist.Infrastructure.Tests;
 
@@ -97,8 +98,8 @@ public class RepositoryTests
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
     public void ManyToManyRelationship(RepositorySource repositoryProvider)
     {
-        var rock = new Genre() { Name = "Rock" };
-        var pop = new Genre() { Name = "Pop" };
+        var rock = new Genre() { Name = Guid.NewGuid().ToString() };
+        var pop = new Genre() { Name = Guid.NewGuid().ToString() };
         
         var trackA = new Track { Name = "Track A" };
         trackA.AddGenre(rock);
@@ -135,8 +136,8 @@ public class RepositoryTests
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
     public void SelfReferencingRelationship(RepositorySource repositoryProvider)
     {
-        var rock = new Genre() { Name = "Rock" };
-        var metal = new Genre() { Name = "metal" };
+        var rock = new Genre() { Name = Guid.NewGuid().ToString() };
+        var metal = new Genre() { Name = Guid.NewGuid().ToString() };
         rock.AddSubGenre(metal);
         
         using var repository = repositoryProvider.CreateRepository();
@@ -144,6 +145,32 @@ public class RepositoryTests
 
         var fetchedGenre = repository.Get<Genre>(rock.Id);
         fetchedGenre.SubGenres.Should().HaveCount(1);
+    }
+    
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void RollbackOnError(RepositorySource repositoryProvider)
+    {
+        var trackA = new Track() { Name = Guid.NewGuid().ToString() };
+        var genreA = trackA.AddGenre(new Genre() { Name = Guid.NewGuid().ToString() });
+        
+        var trackB = new Track() { Name = Guid.NewGuid().ToString() };
+        trackB.AddGenre(new Genre() { Name = genreA.Name});
+        
+        using var repository = repositoryProvider.CreateRepository();
+        repository.Add(trackA);
+
+        try
+        {
+            repository.Add(trackB);
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
+
+        var fetchedTrack = repository.Get(new TrackByName(trackB.Name));
+        fetchedTrack.Should().BeNull();
     }
 
 

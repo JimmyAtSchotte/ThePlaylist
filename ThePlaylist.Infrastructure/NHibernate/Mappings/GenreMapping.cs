@@ -14,6 +14,7 @@ public class GenreMapping : ClassMapping<Genre>
         {
             map.NotNullable(true);
             map.Length(255);
+            map.Unique(true);
         });
         
         Set(x => x.Tracks, map =>
