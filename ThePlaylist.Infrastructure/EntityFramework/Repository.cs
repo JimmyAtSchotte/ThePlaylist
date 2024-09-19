@@ -35,22 +35,15 @@ public class Repository(Context context) : IRepository, IAsyncDisposable
 
     public T Get<T>(object id) where T : class
     {
-        var entity = context.Set<T>().Find(id);
-
-        if (entity is null)
-            throw new EntityNotFoundException();
-
-        return entity;
+       return context.Set<T>().Find(id).EnsureEntityFound();
     }
 
     public T Get<T>(ISpecification<T> specification) where T : class
     {
-        var entity = _specificationEvaluator.GetQuery(context.Set<T>().AsQueryable(), specification).FirstOrDefault();
-
-        if (entity is null)
-            throw new EntityNotFoundException();
-
-        return entity;
+        return _specificationEvaluator
+            .GetQuery(context.Set<T>().AsQueryable(), specification)
+            .FirstOrDefault()
+            .EnsureEntityFound();
     }
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class

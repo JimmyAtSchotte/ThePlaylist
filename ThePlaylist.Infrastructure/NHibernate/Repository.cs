@@ -35,22 +35,16 @@ public class Repository(ISession session) : IRepository
     
     public T Get<T>(object id) where T : class
     {
-        var entity = session.Get<T>(id);
-
-        if (entity is null)
-            throw new EntityNotFoundException();
-
-        return entity;
+        return session.Get<T>(id).EnsureEntityFound();
     }
 
     public T Get<T>(ISpecification<T> specification) where T : class
     {
-       var entity = _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToList().FirstOrDefault();
-
-       if (entity is null)
-           throw new EntityNotFoundException();
-
-       return entity;
+       return _specificationEvaluator
+           .GetQuery(session.Query<T>().AsQueryable(), specification)
+           .ToList()
+           .FirstOrDefault()
+           .EnsureEntityFound();
     }
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
