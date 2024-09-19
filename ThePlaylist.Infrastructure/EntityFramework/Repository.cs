@@ -27,15 +27,19 @@ public class Repository(Context context) : IRepository, IAsyncDisposable
 
     public void Delete<T>(T entity) where T : class
     {
-        context.Set<T>().Remove(entity);
-        context.SaveChanges();
-        
+        if(_unitOfWorkActive)
+            context.Set<T>().Remove(entity);
+        else
+            ExecuteUnitOfWork(_ => Delete(entity));
     }
 
     public T Update<T>(T entity) where T : class
     {
-        context.Set<T>().Update(entity);
-        context.SaveChanges();
+        if(_unitOfWorkActive)
+            context.Set<T>().Update(entity);
+        else
+            ExecuteUnitOfWork(_ => Update(entity));
+        
         return entity;
     }
 

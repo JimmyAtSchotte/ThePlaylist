@@ -16,7 +16,7 @@ public class Repository(ISession session) : IRepository
         if(_unitOfWorkActive)
             session.Save(entity);
         else
-            ExecuteUnitOfWork(_ => session.Save(entity));
+            ExecuteUnitOfWork(_ => Add(entity));
         
         return entity;
     }
@@ -28,35 +28,18 @@ public class Repository(ISession session) : IRepository
 
     public void Delete<T>(T entity) where T : class
     {
-        using var transaction = session.BeginTransaction();
-        try
-        {
+        if(_unitOfWorkActive)
             session.Delete(entity);
-            session.Flush();
-            transaction.Commit();
-        }
-        catch (Exception)
-        {
-            transaction.Rollback();
-            throw;
-        }
+        else
+            ExecuteUnitOfWork(_ => Delete(entity));
     }
     
     public T Update<T>(T entity) where T : class
     {
-        using var transaction = session.BeginTransaction();
-        
-        try
-        {
+        if(_unitOfWorkActive)
             session.Update(entity);
-            session.Flush();
-            transaction.Commit();
-        }
-        catch (Exception)
-        {
-            transaction.Rollback();
-            throw;
-        }
+        else
+            ExecuteUnitOfWork(_ => Update(entity));
         
         return entity;
     }
