@@ -13,11 +13,7 @@ public class Repository(ISession session) : IRepository
     
     public T Add<T>(T entity) where T : class
     {
-        if(_unitOfWorkActive)
-            session.Save(entity);
-        else
-            ExecuteUnitOfWork(_ => Add(entity));
-        
+        ExecuteUnitOfWork(()  => session.Save(entity));
         return entity;
     }
 
@@ -28,19 +24,12 @@ public class Repository(ISession session) : IRepository
 
     public void Delete<T>(T entity) where T : class
     {
-        if(_unitOfWorkActive)
-            session.Delete(entity);
-        else
-            ExecuteUnitOfWork(_ => Delete(entity));
+        ExecuteUnitOfWork(()  => session.Delete(entity));
     }
     
     public T Update<T>(T entity) where T : class
     {
-        if(_unitOfWorkActive)
-            session.Update(entity);
-        else
-            ExecuteUnitOfWork(_ => Update(entity));
-        
+        ExecuteUnitOfWork(()  => session.Update(entity));
         return entity;
     }
     
@@ -108,12 +97,15 @@ public class Repository(ISession session) : IRepository
             _ => _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToList()
         };
     }
-
+    
     public void ExecuteUnitOfWork(Action<IRepository> action)
+        => ExecuteUnitOfWork(() => action.Invoke(this));
+    
+    private void ExecuteUnitOfWork(Action action)
     {
         if (_unitOfWorkActive)
         {
-            action.Invoke(this);
+            action.Invoke();
             return;
         }
         
@@ -123,7 +115,7 @@ public class Repository(ISession session) : IRepository
         {
             _unitOfWorkActive = true;
             
-            action.Invoke(this);
+            action.Invoke();
             transaction.Commit();
             session.Flush();
         }

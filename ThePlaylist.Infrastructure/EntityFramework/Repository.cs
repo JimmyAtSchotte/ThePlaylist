@@ -12,11 +12,7 @@ public class Repository(Context context) : IRepository, IAsyncDisposable
     
     public T Add<T>(T entity) where T : class
     {
-        if(_unitOfWorkActive)
-            context.Add(entity);
-        else
-            ExecuteUnitOfWork(_ => Add(entity));
-        
+        ExecuteUnitOfWork(() =>  context.Add(entity));
         return entity;
     }
 
@@ -27,18 +23,12 @@ public class Repository(Context context) : IRepository, IAsyncDisposable
 
     public void Delete<T>(T entity) where T : class
     {
-        if(_unitOfWorkActive)
-            context.Set<T>().Remove(entity);
-        else
-            ExecuteUnitOfWork(_ => Delete(entity));
+        ExecuteUnitOfWork(() => context.Set<T>().Remove(entity));
     }
 
     public T Update<T>(T entity) where T : class
     {
-        if(_unitOfWorkActive)
-            context.Set<T>().Update(entity);
-        else
-            ExecuteUnitOfWork(_ => Update(entity));
+        ExecuteUnitOfWork(() => context.Set<T>().Update(entity));
         
         return entity;
     }
@@ -72,12 +62,17 @@ public class Repository(Context context) : IRepository, IAsyncDisposable
     {
         return _specificationEvaluator.GetQuery(context.Set<T>().AsQueryable(), specification);
     }
-
+    
     public void ExecuteUnitOfWork(Action<IRepository> action)
+    {
+        ExecuteUnitOfWork(() => action.Invoke(this));
+    }
+    
+    private void ExecuteUnitOfWork(Action action)
     {
         if (_unitOfWorkActive)
         {
-            action.Invoke(this);
+            action.Invoke();
             return;
         }
         
@@ -86,7 +81,7 @@ public class Repository(Context context) : IRepository, IAsyncDisposable
 
         try
         {
-            action.Invoke(this);
+            action.Invoke();
             context.SaveChanges();
             transaction.Commit();
         }
