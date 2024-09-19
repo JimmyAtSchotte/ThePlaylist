@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Genre\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Ardalis.Specification" Version="8.0.0" />
       <PackageReference Include="NHibernate" Version="5.5.2" />
     </ItemGroup>

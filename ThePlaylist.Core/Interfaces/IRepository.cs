@@ -12,4 +12,5 @@ public interface IRepository : IDisposable
     T Get<T>(ISpecification<T> specification) where T : class;
     IEnumerable<T> List<T>(ISpecification<T> specification) where T : class;
     IEnumerable<TResult> List<T, TResult>(ISpecification<T, TResult> specification) where T : class;
+    void ExecuteUnitOfWork(Action<IRepository> action);
 }

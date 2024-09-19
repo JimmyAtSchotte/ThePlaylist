@@ -9,23 +9,15 @@ namespace ThePlaylist.Infrastructure.NHibernate;
 public class Repository(ISession session) : IRepository
 {
     private readonly LinqToQuerySpecificationEvaluator _specificationEvaluator = LinqToQuerySpecificationEvaluator.Default;
-
+    private bool _unitOfWorkActive = false;
+    
     public T Add<T>(T entity) where T : class
     {
-        using var transaction = session.BeginTransaction();
-
-        try
-        {
+        if(_unitOfWorkActive)
             session.Save(entity);
-            session.Flush();
-            transaction.Commit();
-        }
-        catch (Exception)
-        {
-            transaction.Rollback();
-            throw;
-        }
-
+        else
+            ExecuteUnitOfWork(_ => session.Save(entity));
+        
         return entity;
     }
 
@@ -132,6 +124,35 @@ public class Repository(ISession session) : IRepository
             
             _ => _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToList()
         };
+    }
+
+    public void ExecuteUnitOfWork(Action<IRepository> action)
+    {
+        if (_unitOfWorkActive)
+        {
+            action.Invoke(this);
+            return;
+        }
+        
+        using var transaction = session.BeginTransaction();
+
+        try
+        {
+            _unitOfWorkActive = true;
+            
+            action.Invoke(this);
+            transaction.Commit();
+            session.Flush();
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
+        finally
+        {
+            _unitOfWorkActive = false;
+        }
     }
 
     public void Dispose()

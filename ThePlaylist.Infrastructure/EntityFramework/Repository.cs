@@ -8,11 +8,15 @@ namespace ThePlaylist.Infrastructure.EntityFramework;
 public class Repository(Context context) : IRepository, IAsyncDisposable
 {
     private readonly SpecificationEvaluator _specificationEvaluator = SpecificationEvaluator.Default;
-
+    private bool _unitOfWorkActive = false;
+    
     public T Add<T>(T entity) where T : class
     {
-        context.Add(entity);
-        context.SaveChanges();
+        if(_unitOfWorkActive)
+            context.Add(entity);
+        else
+            ExecuteUnitOfWork(_ => Add(entity));
+        
         return entity;
     }
 
@@ -63,6 +67,34 @@ public class Repository(Context context) : IRepository, IAsyncDisposable
     public IEnumerable<TResult> List<T, TResult>(ISpecification<T, TResult> specification) where T : class
     {
         return _specificationEvaluator.GetQuery(context.Set<T>().AsQueryable(), specification);
+    }
+
+    public void ExecuteUnitOfWork(Action<IRepository> action)
+    {
+        if (_unitOfWorkActive)
+        {
+            action.Invoke(this);
+            return;
+        }
+        
+        using var transaction = context.Database.BeginTransaction();
+        _unitOfWorkActive = true;
+
+        try
+        {
+            action.Invoke(this);
+            context.SaveChanges();
+            transaction.Commit();
+        }
+        catch (Exception)
+        {
+            transaction.Rollback();
+            throw;
+        }
+        finally
+        {
+            _unitOfWorkActive = false;
+        }
     }
 
     public void Dispose()

@@ -4,6 +4,7 @@ using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 using ThePlaylist.Specifications;
+using ThePlaylist.Specifications.Genre.Query;
 using ThePlaylist.Specifications.Track.Query;
 
 namespace ThePlaylist.Infrastructure.Tests;
@@ -159,7 +160,7 @@ public class RepositoryTests
     
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void RollbackOnError(RepositorySource repositoryProvider)
+    public void RollbackOnAggregateRootError(RepositorySource repositoryProvider)
     {
         var trackA = new Track() { Name = Guid.NewGuid().ToString() };
         var genreA = trackA.AddGenre(new Genre() { Name = Guid.NewGuid().ToString() });
@@ -172,6 +173,98 @@ public class RepositoryTests
 
         repository.Invoking(r => r.Add(trackB)).Should().Throw<Exception>();
         repository.Invoking(r => r.Get(new TrackByName(trackB.Name))).Should().Throw<EntityNotFoundException>();
+    }
+    
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void RollbackUnitOfWork(RepositorySource repositoryProvider)
+    {
+        var genreA = new Genre() { Name = Guid.NewGuid().ToString() };
+        var genreB = new Genre() { Name = genreA.Name };
+        var genres = new List<Genre>() { genreA, genreB };
+        
+        using var repository = repositoryProvider.CreateRepository();
+
+        try
+        {
+            repository.ExecuteUnitOfWork(r =>
+            {
+                foreach (var genre in genres)
+                    r.Add(genre);
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
+        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
+    }
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void NestedUnitOfWorks(RepositorySource repositoryProvider)
+    {
+        var genre = new Genre() { Name = Guid.NewGuid().ToString() };
+        var genreA = new Genre() { Name = Guid.NewGuid().ToString() };
+        var genreB = new Genre() { Name = genreA.Name };
+        var genres = new List<Genre>() { genreA, genreB };
+        
+        using var repository = repositoryProvider.CreateRepository();
+
+        try
+        {
+            repository.ExecuteUnitOfWork(r =>
+            {
+                r.Add(genre);
+            
+                r.ExecuteUnitOfWork(r2 =>
+                {
+                    foreach (var g in genres)
+                        r2.Add(g);
+                });
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+      
+
+        repository.Invoking(r => r.Get(new GenreByNameQuery(genre.Name))).Should().Throw<EntityNotFoundException>();
+        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
+    }
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void MultipleUnitOfWorks(RepositorySource repositoryProvider)
+    {
+        var genre = new Genre() { Name = Guid.NewGuid().ToString() };
+        var genreA = new Genre() { Name = Guid.NewGuid().ToString() };
+        var genreB = new Genre() { Name = genreA.Name };
+        var genres = new List<Genre>() { genreA, genreB };
+        
+        using var repository = repositoryProvider.CreateRepository();
+
+        repository.ExecuteUnitOfWork(r =>
+        {
+            r.Add(genre);
+        });
+
+        try
+        {
+            repository.ExecuteUnitOfWork(r =>
+            {
+                foreach (var g in genres)
+                    r.Add(g);
+            });
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+      
+
+        repository.Invoking(r => r.Get(new GenreByNameQuery(genre.Name))).Should().NotThrow();
+        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
     }
 
 
