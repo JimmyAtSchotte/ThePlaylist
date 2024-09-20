@@ -14,7 +14,7 @@ public class AllPlaylistNames
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(playlist);
 
-        var names = repository.List<Core.Entitites.Playlist>(new ThePlaylist.Specifications.Playlist.Query.AllPlaylistNames());
+        var names = repository.List(new ThePlaylist.Specifications.Playlist.Query.AllPlaylistNames());
         names.Should().Contain(x => x.Name == playlist.Name);
     }
 }
