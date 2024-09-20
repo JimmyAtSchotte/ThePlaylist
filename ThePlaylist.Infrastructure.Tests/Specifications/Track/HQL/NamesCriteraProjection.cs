@@ -19,9 +19,7 @@ public class NamesHqlProjection
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(track);
         
-        var fetchedTracks = repository.List(new TrackNamesHqlProjection());
-        
-        fetchedTracks.Should().Contain(x => x.Name == track.Name);
+        repository.List(new TrackNamesHqlProjection()).Should().Contain(x => x.Name == track.Name);
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]

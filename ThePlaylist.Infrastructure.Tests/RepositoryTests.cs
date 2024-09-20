@@ -3,8 +3,10 @@ using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Infrastructure.Tests.Specifications.Track.Query;
 using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Genre.Query;
+using ThePlaylist.Specifications.Track.HQL;
 using ThePlaylist.Specifications.Track.Query;
 
 namespace ThePlaylist.Infrastructure.Tests;
@@ -28,6 +30,21 @@ public class RepositoryTests
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task AddEntityAsync(RepositorySource repositoryProvider)
+    {
+        var playlist = new Playlist()
+        {
+            Name = "My playlist",
+            Description = "My playlist description"
+        };
+
+        await using var repository = repositoryProvider.CreateRepository();
+
+        var savesPlaylist = await repository.AddAsync(playlist);
+        savesPlaylist.Id.Should().NotBe(Guid.Empty);
+    }
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
     public void ListEntities(RepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
@@ -41,6 +58,52 @@ public class RepositoryTests
         
         var playlists = repository.List<Playlist>();
         playlists.Should().Contain(x => x.Id == playlist.Id);
+    }
+    
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task ListEntitiesAsync(RepositorySource repositoryProvider)
+    {
+        var playlist = new Playlist()
+        {
+            Name = "My playlist 2",
+            Description = "My playlist 2 description"
+        };
+        await using var repository = repositoryProvider.CreateRepository();
+        
+        await repository.AddAsync(playlist);
+        
+        var playlists = await repository.ListAsync<Playlist>();
+        playlists.Should().Contain(x => x.Id == playlist.Id);
+    }
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void ListEntitiesBySpecification(RepositorySource repositoryProvider)
+    {
+        var playlist = new Playlist()
+        {
+            Name = Guid.NewGuid().ToString(),
+            Description = "My playlist 2 description"
+        };
+        using var repository = repositoryProvider.CreateRepository();
+        
+        repository.Add(playlist);
+        repository.List<Playlist>(new ThePlaylist.Specifications.Playlist.Query.ByName(playlist.Name)).Should().Contain(x => x.Id == playlist.Id);
+    }
+    
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task ListEntitiesBySpecificationAsync(RepositorySource repositoryProvider)
+    {
+        var playlist = new Playlist()
+        {
+            Name = Guid.NewGuid().ToString(),
+            Description = "My playlist 2 description"
+        };
+        await using var repository = repositoryProvider.CreateRepository();
+        
+        await repository.AddAsync(playlist);
+        (await repository.ListAsync<Playlist>(new ThePlaylist.Specifications.Playlist.Query.ByName(playlist.Name))).Should().Contain(x => x.Id == playlist.Id);
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
@@ -57,6 +120,23 @@ public class RepositoryTests
         repository.Delete(savesPlaylist);
         
         var playlists = repository.List<Playlist>();
+        playlists.Should().NotContain(x => x.Id == savesPlaylist.Id);
+    }
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task DeleteEntityAsync(RepositorySource repositoryProvider)
+    {
+        var playlist = new Playlist()
+        {
+            Name = "My playlist 3",
+            Description = "My playlist 3 description"
+        };
+        await using var repository = repositoryProvider.CreateRepository();
+        
+        var savesPlaylist = await repository.AddAsync(playlist);
+        await repository.DeleteAsync(savesPlaylist);
+        
+        var playlists = await repository.ListAsync<Playlist>();
         playlists.Should().NotContain(x => x.Id == savesPlaylist.Id);
     }
     
@@ -80,6 +160,26 @@ public class RepositoryTests
         playlists.First(x => x.Id == savesPlaylist.Id).Description.Should().Be("UPDATED");
     }
     
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task UpdateEntityAsync(RepositorySource repositoryProvider)
+    {
+        var playlist = new Playlist()
+        {
+            Name = "My playlist 4",
+            Description = "My playlist 4 description"
+        };
+
+        await using var repository = repositoryProvider.CreateRepository();
+        var savesPlaylist = await repository.AddAsync(playlist);
+        savesPlaylist.Description = "UPDATED";
+        
+       await repository.UpdateAsync(savesPlaylist);
+        
+        var playlists = await repository.ListAsync<Playlist>();
+        playlists.First(x => x.Id == savesPlaylist.Id).Description.Should().Be("UPDATED");
+    }
+    
    
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
     public void GetEntity(RepositorySource repositoryProvider)
@@ -93,8 +193,25 @@ public class RepositoryTests
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(playlist);
         
-        var result = repository.Get<Playlist>(playlist.Id);
-        result.Should().NotBeNull();
+        repository.Get<Playlist>(playlist.Id).Should().NotBeNull();
+        repository.Get<Playlist>(new ById<Playlist>(playlist.Id)).Should().NotBeNull();
+       
+    }
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task GetEntityAsync(RepositorySource repositoryProvider)
+    {
+        var playlist = new Playlist()
+        {
+            Name = "My playlist 5",
+            Description = "My playlist 5 description"
+        };
+
+        await using var repository = repositoryProvider.CreateRepository();
+        await repository.AddAsync(playlist);
+        
+       (await repository.GetAsync<Playlist>(playlist.Id)).Should().NotBeNull();
+       (await repository.GetAsync<Playlist>(new ById<Playlist>(playlist.Id))).Should().NotBeNull();
     }
 
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
@@ -266,6 +383,32 @@ public class RepositoryTests
         repository.Invoking(r => r.Get(new GenreByNameQuery(genre.Name))).Should().NotThrow();
         repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
     }
-
-
+    
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public void Projection(RepositorySource repositoryProvider)
+    {
+        var track = new Core.Entitites.Track
+        {
+            Name = Guid.NewGuid().ToString()
+        };
+        
+        using var repository = repositoryProvider.CreateRepository();
+        repository.Add(track);
+        
+        repository.List(new TrackByNameProjection(track.Name)).Should().Contain(x => x.Name == track.Name);
+    }
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task ProjectionAsync(RepositorySource repositoryProvider)
+    {
+        var track = new Core.Entitites.Track
+        {
+            Name = Guid.NewGuid().ToString()
+        };
+        
+        await using var repository = repositoryProvider.CreateRepository();
+        await repository.AddAsync(track);
+        (await repository.ListAsync(new TrackByNameProjection(track.Name))).Should().Contain(x => x.Name == track.Name);
+    }
 }
