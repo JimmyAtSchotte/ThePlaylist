@@ -4,15 +4,11 @@ using NHibernate.Linq;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Infrastructure.NHibernate.Specification;
-using ThePlaylist.Specifications;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
 public class Repository(ISession session) : IRepository
 {
-    private readonly LinqToQuerySpecificationEvaluator _specificationEvaluator =
-        LinqToQuerySpecificationEvaluator.Default;
-
     private bool _unitOfWorkActive;
 
     public T Get<T>(object id) where T : class
