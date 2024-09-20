@@ -26,16 +26,14 @@ public class Repository(ISession session) : IRepository
     
     public T Get<T>(ISpecification<T> specification) where T : class
     {
-        return _specificationEvaluator
-            .GetQuery(session.Query<T>().AsQueryable(), specification)
+        return session.ApplySpecification(_specificationEvaluator, specification)
             .FirstOrDefault()
             .EnsureEntityFound()!;
     }
 
     public Task<T> GetAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
-        return _specificationEvaluator
-            .GetQuery(session.Query<T>().AsQueryable(), specification)
+        return session.ApplySpecification(_specificationEvaluator, specification)
             .FirstOrDefaultAsync(cancellationToken)
             .EnsureEntityFound()!;
     }
@@ -91,21 +89,14 @@ public class Repository(ISession session) : IRepository
     {
         return specification switch
         {
-            CriteriaSpecification<T> criteriaSpecification =>
-                session.CreateCriteria<T>()
-                    .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
-                    .List<T>(),
-
+            CriteriaSpecification<T> criteriaSpecification => 
+                session.ApplySpecification(criteriaSpecification).List<T>(),
             QueryOverSpecification<T> queryOverSpecification =>
-                session.QueryOver<T>()
-                    .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
-                    .List<T>(),
-
+                session.ApplySpecification(queryOverSpecification).List<T>(),
             HqlSpecification<T> hqlSpecification =>
-                session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
-                    .List<T>(),
-
-            _ => _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToList()
+                session.ApplySpecification(hqlSpecification).List<T>(),
+            _ =>
+                session.ApplySpecification(_specificationEvaluator, specification).ToList()
         };
     }
 
@@ -113,21 +104,14 @@ public class Repository(ISession session) : IRepository
     {
         return specification switch
         {
-            CriteriaSpecification<T> criteriaSpecification =>
-                await session.CreateCriteria<T>()
-                    .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
-                    .ListAsync<T>(cancellationToken),
-
+            CriteriaSpecification<T> criteriaSpecification => 
+                await session.ApplySpecification(criteriaSpecification).ListAsync<T>(cancellationToken),
             QueryOverSpecification<T> queryOverSpecification =>
-                await session.QueryOver<T>()
-                    .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
-                    .ListAsync<T>(cancellationToken),
-
+                await session.ApplySpecification(queryOverSpecification).ListAsync<T>(cancellationToken),
             HqlSpecification<T> hqlSpecification =>
-                await session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
-                    .ListAsync<T>(cancellationToken),
-
-            _ => await _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToListAsync(cancellationToken)
+                await session.ApplySpecification(hqlSpecification).ListAsync<T>(cancellationToken),
+            _ => 
+                await session.ApplySpecification(_specificationEvaluator, specification).ToListAsync(cancellationToken)
         };
     }
 
@@ -135,21 +119,14 @@ public class Repository(ISession session) : IRepository
     {
         return specification switch
         {
-            CriteriaSpecification<T, TResult> criteriaSpecification =>
-                session.CreateCriteria<T>()
-                    .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
-                    .List<TResult>(),
-
+            CriteriaSpecification<T, TResult> criteriaSpecification => 
+                session.ApplySpecification(criteriaSpecification).List<TResult>(),
             QueryOverSpecification<T, TResult> queryOverSpecification =>
-                session.QueryOver<T>()
-                    .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
-                    .List<TResult>(),
-
+                session.ApplySpecification(queryOverSpecification).List<TResult>(),
             HqlSpecification<T, TResult> hqlSpecification =>
-                session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
-                    .List<TResult>(),
-
-            _ => _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToList()
+                session.ApplySpecification(hqlSpecification).List<TResult>(),
+            _ => 
+                session.ApplySpecification(_specificationEvaluator, specification).ToList()
         };
     }
 
@@ -157,21 +134,14 @@ public class Repository(ISession session) : IRepository
     {
         return specification switch
         {
-            CriteriaSpecification<T, TResult> criteriaSpecification =>
-                await session.CreateCriteria<T>()
-                    .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
-                    .ListAsync<TResult>(cancellationToken),
-
+            CriteriaSpecification<T, TResult> criteriaSpecification => 
+                await session.ApplySpecification(criteriaSpecification).ListAsync<TResult>(cancellationToken),
             QueryOverSpecification<T, TResult> queryOverSpecification =>
-                await session.QueryOver<T>()
-                    .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
-                    .ListAsync<TResult>(cancellationToken),
-
+                await session.ApplySpecification(queryOverSpecification).ListAsync<TResult>(cancellationToken),
             HqlSpecification<T, TResult> hqlSpecification =>
-                await session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
-                    .ListAsync<TResult>(cancellationToken),
-
-           _ => await _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToListAsync(cancellationToken)
+                await session.ApplySpecification(hqlSpecification).ListAsync<TResult>(cancellationToken),
+           _ => 
+               await session.ApplySpecification(_specificationEvaluator, specification).ToListAsync(cancellationToken)
         };
     }
 
