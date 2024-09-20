@@ -12,6 +12,6 @@ public class EfCoreRepositoryFactory
         var optionsBuilder = new DbContextOptionsBuilder();
         optionsBuilder.UseSqlServer("Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test;Trusted_Connection=True;TrustServerCertificate=True;");
         optionsBuilder.LogTo(Console.WriteLine);
-        return new Repository(new Context(optionsBuilder.Options));
+        return new EntityFramework.Repository(new Context(optionsBuilder.Options));
     }
 }

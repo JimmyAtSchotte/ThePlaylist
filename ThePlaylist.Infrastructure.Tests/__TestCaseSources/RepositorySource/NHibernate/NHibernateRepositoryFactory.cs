@@ -23,7 +23,7 @@ public class NHibernateRepositoryFactory
         
         new SchemaExport(configuration).Execute(true, true, false, session.Connection, null);
         
-        return new Repository(session);
+        return new Infrastructure.NHibernate.Repository(session);
     }
 
     public static IRepository UseSqlExpress(string connectionString = SQL_EXPRESS_CONNECTION)
@@ -37,7 +37,7 @@ public class NHibernateRepositoryFactory
         
         new SchemaExport(configuration).Execute(true, true, false, session.Connection, null);
         
-        return new Repository(session);
+        return new Infrastructure.NHibernate.Repository(session);
         
     }
 }
