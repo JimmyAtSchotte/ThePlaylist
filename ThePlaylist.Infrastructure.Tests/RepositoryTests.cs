@@ -318,6 +318,33 @@ public class RepositoryTests
         repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
     }
     
+    
+    [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
+    public async Task RollbackUnitOfWorkAsync(RepositorySource repositoryProvider)
+    {
+        var genreA = new Genre() { Name = Guid.NewGuid().ToString() };
+        var genreB = new Genre() { Name = genreA.Name };
+        var genres = new List<Genre>() { genreA, genreB };
+
+        await using var repository = repositoryProvider.CreateRepository();
+
+        try
+        {
+            await repository.ExecuteUnitOfWorkAsync(async r =>
+            {
+                foreach (var genre in genres)
+                   await r.AddAsync(genre, CancellationToken.None);
+                
+            }, CancellationToken.None);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        
+        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
+    }
+    
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
     public void NestedUnitOfWorks(RepositorySource repositoryProvider)
     {
