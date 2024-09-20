@@ -1,5 +1,5 @@
 ﻿using Ardalis.Specification;
-using ThePlaylist.Infrastructure.NHibernate.Evaluators;
+using ThePlaylist.Infrastructure.NHibernate.Specification.Evaluators;
 
 namespace ThePlaylist.Infrastructure.NHibernate.Specification;
 

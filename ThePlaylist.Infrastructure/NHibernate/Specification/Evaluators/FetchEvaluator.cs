@@ -2,7 +2,7 @@
 using Ardalis.Specification;
 using NHibernate.Linq;
 
-namespace ThePlaylist.Infrastructure.NHibernate.Evaluators;
+namespace ThePlaylist.Infrastructure.NHibernate.Specification.Evaluators;
 
 public class FetchEvaluator : IEvaluator
 {
