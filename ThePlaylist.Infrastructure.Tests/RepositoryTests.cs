@@ -40,7 +40,7 @@ public class RepositoryTests
 
         await using var repository = repositoryProvider.CreateRepository();
 
-        var savesPlaylist = await repository.AddAsync(playlist);
+        var savesPlaylist = await repository.AddAsync(playlist, CancellationToken.None);
         savesPlaylist.Id.Should().NotBe(Guid.Empty);
     }
     
@@ -71,9 +71,9 @@ public class RepositoryTests
         };
         await using var repository = repositoryProvider.CreateRepository();
         
-        await repository.AddAsync(playlist);
+        await repository.AddAsync(playlist, CancellationToken.None);
         
-        var playlists = await repository.ListAsync<Playlist>();
+        var playlists = await repository.ListAsync<Playlist>(CancellationToken.None);
         playlists.Should().Contain(x => x.Id == playlist.Id);
     }
     
@@ -102,8 +102,8 @@ public class RepositoryTests
         };
         await using var repository = repositoryProvider.CreateRepository();
         
-        await repository.AddAsync(playlist);
-        (await repository.ListAsync<Playlist>(new ThePlaylist.Specifications.Playlist.Query.ByName(playlist.Name))).Should().Contain(x => x.Id == playlist.Id);
+        await repository.AddAsync(playlist, CancellationToken.None);
+        (await repository.ListAsync<Playlist>(new ThePlaylist.Specifications.Playlist.Query.ByName(playlist.Name), CancellationToken.None)).Should().Contain(x => x.Id == playlist.Id);
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
@@ -133,11 +133,11 @@ public class RepositoryTests
         };
         await using var repository = repositoryProvider.CreateRepository();
         
-        var savesPlaylist = await repository.AddAsync(playlist);
-        await repository.DeleteAsync(savesPlaylist);
+        var savedPlaylist = await repository.AddAsync(playlist, CancellationToken.None);
+        await repository.DeleteAsync(savedPlaylist, CancellationToken.None);
         
-        var playlists = await repository.ListAsync<Playlist>();
-        playlists.Should().NotContain(x => x.Id == savesPlaylist.Id);
+        var playlists = await repository.ListAsync<Playlist>(CancellationToken.None);
+        playlists.Should().NotContain(x => x.Id == savedPlaylist.Id);
     }
     
     
@@ -171,12 +171,12 @@ public class RepositoryTests
         };
 
         await using var repository = repositoryProvider.CreateRepository();
-        var savesPlaylist = await repository.AddAsync(playlist);
+        var savesPlaylist = await repository.AddAsync(playlist, CancellationToken.None);
         savesPlaylist.Description = "UPDATED";
         
-       await repository.UpdateAsync(savesPlaylist);
+       await repository.UpdateAsync(savesPlaylist, CancellationToken.None);
         
-        var playlists = await repository.ListAsync<Playlist>();
+        var playlists = await repository.ListAsync<Playlist>(CancellationToken.None);
         playlists.First(x => x.Id == savesPlaylist.Id).Description.Should().Be("UPDATED");
     }
     
@@ -208,10 +208,10 @@ public class RepositoryTests
         };
 
         await using var repository = repositoryProvider.CreateRepository();
-        await repository.AddAsync(playlist);
+        await repository.AddAsync(playlist, CancellationToken.None);
         
-       (await repository.GetAsync<Playlist>(playlist.Id)).Should().NotBeNull();
-       (await repository.GetAsync<Playlist>(new ById<Playlist>(playlist.Id))).Should().NotBeNull();
+       (await repository.GetAsync<Playlist>(playlist.Id, CancellationToken.None)).Should().NotBeNull();
+       (await repository.GetAsync<Playlist>(new ById<Playlist>(playlist.Id), CancellationToken.None)).Should().NotBeNull();
     }
 
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
@@ -408,7 +408,7 @@ public class RepositoryTests
         };
         
         await using var repository = repositoryProvider.CreateRepository();
-        await repository.AddAsync(track);
-        (await repository.ListAsync(new TrackByNameProjection(track.Name))).Should().Contain(x => x.Name == track.Name);
+        await repository.AddAsync(track, CancellationToken.None);
+        (await repository.ListAsync(new TrackByNameProjection(track.Name), CancellationToken.None)).Should().Contain(x => x.Name == track.Name);
     }
 }

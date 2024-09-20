@@ -16,9 +16,9 @@ public class Repository(Context context) : IRepository
         return context.Set<T>().Find(id).EnsureEntityFound()!;
     }
 
-    public async Task<T> GetAsync<T>(object id) where T : class
+    public async Task<T> GetAsync<T>(object id, CancellationToken cancellationToken) where T : class
     {
-        return (await context.Set<T>().FindAsync(id).EnsureEntityFound())!;
+        return (await context.Set<T>().FindAsync([id], cancellationToken).EnsureEntityFound())!;
     }
 
     public T Get<T>(ISpecification<T> specification) where T : class
@@ -29,11 +29,11 @@ public class Repository(Context context) : IRepository
             .EnsureEntityFound()!;
     }
 
-    public async Task<T> GetAsync<T>(ISpecification<T> specification) where T : class
+    public async Task<T> GetAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
         return (await _specificationEvaluator
             .GetQuery(context.Set<T>().AsQueryable(), specification)
-            .FirstOrDefaultAsync()
+            .FirstOrDefaultAsync(cancellationToken)
             .EnsureEntityFound())!;
     }
 
@@ -43,9 +43,9 @@ public class Repository(Context context) : IRepository
         return entity;
     }
 
-    public async Task<T> AddAsync<T>(T entity) where T : class
+    public async Task<T> AddAsync<T>(T entity, CancellationToken cancellationToken) where T : class
     {
-        await ExecuteUnitOfWorkAsync(async () => await context.AddAsync(entity));
+        await ExecuteUnitOfWorkAsync(async () => await context.AddAsync(entity, cancellationToken), cancellationToken);
         return entity;
     }
 
@@ -56,10 +56,10 @@ public class Repository(Context context) : IRepository
         return entity;
     }
 
-    public async Task<T> UpdateAsync<T>(T entity) where T : class
+    public async Task<T> UpdateAsync<T>(T entity, CancellationToken cancellationToken) where T : class
     {
         
-        await ExecuteUnitOfWorkAsync(async () => await Task.Run(() => context.Set<T>().Update(entity)));
+        await ExecuteUnitOfWorkAsync(async () => await Task.Run(() => context.Set<T>().Update(entity), cancellationToken), cancellationToken);
         
         return entity;
     }
@@ -69,9 +69,9 @@ public class Repository(Context context) : IRepository
         ExecuteUnitOfWork(() => context.Set<T>().Remove(entity));
     }
 
-    public async Task DeleteAsync<T>(T entity) where T : class
+    public async Task DeleteAsync<T>(T entity, CancellationToken cancellationToken) where T : class
     {
-       await ExecuteUnitOfWorkAsync(async () => await Task.Run(() => context.Set<T>().Remove(entity)));
+       await ExecuteUnitOfWorkAsync(async () => await Task.Run(() => context.Set<T>().Remove(entity), cancellationToken), cancellationToken);
     }
 
     public IEnumerable<T> List<T>() where T : class
@@ -79,9 +79,9 @@ public class Repository(Context context) : IRepository
         return context.Set<T>().ToList();
     }
 
-    public async Task<IEnumerable<T>> ListAsync<T>() where T : class
+    public async Task<IEnumerable<T>> ListAsync<T>(CancellationToken cancellationToken) where T : class
     {
-        return await EntityFrameworkQueryableExtensions.ToListAsync(context.Set<T>());
+        return await context.Set<T>().ToListAsync(cancellationToken);
     }
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
@@ -89,11 +89,11 @@ public class Repository(Context context) : IRepository
         return _specificationEvaluator.GetQuery(context.Set<T>().AsQueryable(), specification).ToList();
     }
 
-    public async Task<IEnumerable<T>> ListAsync<T>(ISpecification<T> specification) where T : class
+    public async Task<IEnumerable<T>> ListAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
         return await _specificationEvaluator
             .GetQuery(context.Set<T>().AsQueryable(), specification)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public IEnumerable<TResult> List<T, TResult>(ISpecification<T, TResult> specification) where T : class
@@ -103,16 +103,22 @@ public class Repository(Context context) : IRepository
             .ToList();
     }
 
-    public async Task<IEnumerable<TResult>> ListAsync<T, TResult>(ISpecification<T, TResult> specification) where T : class
+    public async Task<IEnumerable<TResult>> ListAsync<T, TResult>(ISpecification<T, TResult> specification, CancellationToken cancellationToken) where T : class
     {
         return await _specificationEvaluator
             .GetQuery(context.Set<T>().AsQueryable(), specification)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
     public void ExecuteUnitOfWork(Action<IRepository> action)
     {
         ExecuteUnitOfWork(() => action.Invoke(this));
+    }
+    
+
+    public async Task ExecuteUnitOfWorkAsync(Func<IRepository, Task> action, CancellationToken cancellationToken)
+    {
+        await ExecuteUnitOfWorkAsync(async () => await action.Invoke(this), cancellationToken);
     }
 
     public void Dispose()
@@ -149,7 +155,7 @@ public class Repository(Context context) : IRepository
     }
     
     
-    private async Task ExecuteUnitOfWorkAsync(Func<Task> action)
+    private async Task ExecuteUnitOfWorkAsync(Func<Task> action, CancellationToken cancellationToken)
     {
         if (_unitOfWorkActive)
         {
@@ -157,18 +163,18 @@ public class Repository(Context context) : IRepository
             return;
         }
 
-        await using var transaction = await context.Database.BeginTransactionAsync();
+        await using var transaction = await context.Database.BeginTransactionAsync(cancellationToken);
         _unitOfWorkActive = true;
 
         try
         {
             await action.Invoke();
-            await context.SaveChangesAsync();
-            await transaction.CommitAsync();
+            await context.SaveChangesAsync(cancellationToken);
+            await transaction.CommitAsync(cancellationToken);
         }
         catch (Exception)
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(cancellationToken);
             throw;
         }
         finally

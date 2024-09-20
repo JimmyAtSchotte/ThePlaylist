@@ -19,9 +19,9 @@ public class Repository(ISession session) : IRepository
         return session.Get<T>(id).EnsureEntityFound();
     }
 
-    public Task<T> GetAsync<T>(object id) where T : class
+    public Task<T> GetAsync<T>(object id, CancellationToken cancellationToken) where T : class
     {
-        return session.GetAsync<T>(id).EnsureEntityFound();
+        return session.GetAsync<T>(id, cancellationToken).EnsureEntityFound();
     }
     
     public T Get<T>(ISpecification<T> specification) where T : class
@@ -32,11 +32,11 @@ public class Repository(ISession session) : IRepository
             .EnsureEntityFound()!;
     }
 
-    public Task<T> GetAsync<T>(ISpecification<T> specification) where T : class
+    public Task<T> GetAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
         return _specificationEvaluator
             .GetQuery(session.Query<T>().AsQueryable(), specification)
-            .FirstOrDefaultAsync()
+            .FirstOrDefaultAsync(cancellationToken)
             .EnsureEntityFound()!;
     }
 
@@ -46,9 +46,9 @@ public class Repository(ISession session) : IRepository
         return entity;
     }
 
-    public async Task<T> AddAsync<T>(T entity) where T : class
+    public async Task<T> AddAsync<T>(T entity, CancellationToken cancellationToken) where T : class
     {
-        await ExecuteUnitOfWorkAsync(async () => await session.SaveAsync(entity));
+        await ExecuteUnitOfWorkAsync(async () => await session.SaveAsync(entity, cancellationToken), cancellationToken);
         return entity;
     }
 
@@ -58,9 +58,9 @@ public class Repository(ISession session) : IRepository
         return entity;
     }
 
-    public async Task<T> UpdateAsync<T>(T entity) where T : class
+    public async Task<T> UpdateAsync<T>(T entity, CancellationToken cancellationToken) where T : class
     {
-        await ExecuteUnitOfWorkAsync(async () => await session.UpdateAsync(entity));
+        await ExecuteUnitOfWorkAsync(async () => await session.UpdateAsync(entity, cancellationToken), cancellationToken);
         return entity;
     }
 
@@ -69,9 +69,9 @@ public class Repository(ISession session) : IRepository
         ExecuteUnitOfWork(() => session.Delete(entity));
     }
 
-    public async Task DeleteAsync<T>(T entity) where T : class
+    public async Task DeleteAsync<T>(T entity, CancellationToken cancellationToken) where T : class
     {
-        await ExecuteUnitOfWorkAsync(async () => await session.DeleteAsync(entity));
+        await ExecuteUnitOfWorkAsync(async () => await session.DeleteAsync(entity, cancellationToken), cancellationToken);
 
     }
 
@@ -80,9 +80,9 @@ public class Repository(ISession session) : IRepository
         return session.Query<T>().ToList();
     }
 
-    public async Task<IEnumerable<T>> ListAsync<T>() where T : class
+    public async Task<IEnumerable<T>> ListAsync<T>(CancellationToken cancellationToken) where T : class
     {
-        return await session.Query<T>().ToListAsync();
+        return await session.Query<T>().ToListAsync(cancellationToken);
     }
 
 
@@ -109,25 +109,25 @@ public class Repository(ISession session) : IRepository
         };
     }
 
-    public async Task<IEnumerable<T>> ListAsync<T>(ISpecification<T> specification) where T : class
+    public async Task<IEnumerable<T>> ListAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
         return specification switch
         {
             CriteriaSpecification<T> criteriaSpecification =>
                 await session.CreateCriteria<T>()
                     .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
-                    .ListAsync<T>(),
+                    .ListAsync<T>(cancellationToken),
 
             QueryOverSpecification<T> queryOverSpecification =>
                 await session.QueryOver<T>()
                     .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
-                    .ListAsync<T>(),
+                    .ListAsync<T>(cancellationToken),
 
             HqlSpecification<T> hqlSpecification =>
                 await session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
-                    .ListAsync<T>(),
+                    .ListAsync<T>(cancellationToken),
 
-            _ => await _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToListAsync()
+            _ => await _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToListAsync(cancellationToken)
         };
     }
 
@@ -153,31 +153,36 @@ public class Repository(ISession session) : IRepository
         };
     }
 
-    public async Task<IEnumerable<TResult>> ListAsync<T, TResult>(ISpecification<T, TResult> specification) where T : class
+    public async Task<IEnumerable<TResult>> ListAsync<T, TResult>(ISpecification<T, TResult> specification, CancellationToken cancellationToken) where T : class
     {
         return specification switch
         {
             CriteriaSpecification<T, TResult> criteriaSpecification =>
                 await session.CreateCriteria<T>()
                     .Apply(query => criteriaSpecification.GetCriteria().Invoke(query))
-                    .ListAsync<TResult>(),
+                    .ListAsync<TResult>(cancellationToken),
 
             QueryOverSpecification<T, TResult> queryOverSpecification =>
                 await session.QueryOver<T>()
                     .Apply(queryOver => queryOverSpecification.GetQueryOver().Invoke(queryOver))
-                    .ListAsync<TResult>(),
+                    .ListAsync<TResult>(cancellationToken),
 
             HqlSpecification<T, TResult> hqlSpecification =>
                 await session.Apply(hql => hqlSpecification.GetHql().Invoke(hql))
-                    .ListAsync<TResult>(),
+                    .ListAsync<TResult>(cancellationToken),
 
-            _ => await _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToListAsync()
+           _ => await _specificationEvaluator.GetQuery(session.Query<T>().AsQueryable(), specification).ToListAsync(cancellationToken)
         };
     }
 
     public void ExecuteUnitOfWork(Action<IRepository> action)
     {
         ExecuteUnitOfWork(() => action.Invoke(this));
+    }
+    
+    public async Task ExecuteUnitOfWorkAsync(Func<IRepository, Task> action, CancellationToken cancellationToken)
+    {
+       await ExecuteUnitOfWorkAsync(async () => await action.Invoke(this), cancellationToken);
     }
 
     public void Dispose()
@@ -222,7 +227,7 @@ public class Repository(ISession session) : IRepository
         }
     }
     
-    private async Task ExecuteUnitOfWorkAsync(Func<Task> action)
+    private async Task ExecuteUnitOfWorkAsync(Func<Task> action, CancellationToken cancellationToken)
     {
         if (_unitOfWorkActive)
         {
@@ -237,12 +242,12 @@ public class Repository(ISession session) : IRepository
             _unitOfWorkActive = true;
 
             await action.Invoke();
-            await transaction.CommitAsync();
-            await session.FlushAsync();
+            await transaction.CommitAsync(cancellationToken);
+            await session.FlushAsync(cancellationToken);
         }
         catch (Exception)
         {
-            await transaction.RollbackAsync();
+            await transaction.RollbackAsync(cancellationToken);
             throw;
         }
         finally
