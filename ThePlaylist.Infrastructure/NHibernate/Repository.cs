@@ -3,6 +3,7 @@ using NHibernate;
 using NHibernate.Linq;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Infrastructure.Exceptions;
+using ThePlaylist.Infrastructure.NHibernate.Specification;
 using ThePlaylist.Specifications;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
@@ -26,14 +27,14 @@ public class Repository(ISession session) : IRepository
     
     public T Get<T>(ISpecification<T> specification) where T : class
     {
-        return session.ApplySpecification(_specificationEvaluator, specification)
+        return session.ApplySpecification(specification)
             .FirstOrDefault()
             .EnsureEntityFound()!;
     }
 
     public Task<T> GetAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
-        return session.ApplySpecification(_specificationEvaluator, specification)
+        return session.ApplySpecification(specification)
             .FirstOrDefaultAsync(cancellationToken)
             .EnsureEntityFound()!;
     }
@@ -87,62 +88,22 @@ public class Repository(ISession session) : IRepository
 
     public IEnumerable<T> List<T>(ISpecification<T> specification) where T : class
     {
-        return specification switch
-        {
-            CriteriaSpecification<T> criteriaSpecification => 
-                session.ApplySpecification(criteriaSpecification).List<T>(),
-            QueryOverSpecification<T> queryOverSpecification =>
-                session.ApplySpecification(queryOverSpecification).List<T>(),
-            HqlSpecification<T> hqlSpecification =>
-                session.ApplySpecification(hqlSpecification).List<T>(),
-            _ =>
-                session.ApplySpecification(_specificationEvaluator, specification).ToList()
-        };
+        return session.ApplySpecification(specification).ToList();
     }
 
     public async Task<IEnumerable<T>> ListAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
-        return specification switch
-        {
-            CriteriaSpecification<T> criteriaSpecification => 
-                await session.ApplySpecification(criteriaSpecification).ListAsync<T>(cancellationToken),
-            QueryOverSpecification<T> queryOverSpecification =>
-                await session.ApplySpecification(queryOverSpecification).ListAsync<T>(cancellationToken),
-            HqlSpecification<T> hqlSpecification =>
-                await session.ApplySpecification(hqlSpecification).ListAsync<T>(cancellationToken),
-            _ => 
-                await session.ApplySpecification(_specificationEvaluator, specification).ToListAsync(cancellationToken)
-        };
+        return await session.ApplySpecification(specification).ToListAsync(cancellationToken);
     }
 
     public IEnumerable<TResult> List<T, TResult>(ISpecification<T, TResult> specification) where T : class
     {
-        return specification switch
-        {
-            CriteriaSpecification<T, TResult> criteriaSpecification => 
-                session.ApplySpecification(criteriaSpecification).List<TResult>(),
-            QueryOverSpecification<T, TResult> queryOverSpecification =>
-                session.ApplySpecification(queryOverSpecification).List<TResult>(),
-            HqlSpecification<T, TResult> hqlSpecification =>
-                session.ApplySpecification(hqlSpecification).List<TResult>(),
-            _ => 
-                session.ApplySpecification(_specificationEvaluator, specification).ToList()
-        };
+        return session.ApplySpecification(specification).ToList();
     }
 
     public async Task<IEnumerable<TResult>> ListAsync<T, TResult>(ISpecification<T, TResult> specification, CancellationToken cancellationToken) where T : class
     {
-        return specification switch
-        {
-            CriteriaSpecification<T, TResult> criteriaSpecification => 
-                await session.ApplySpecification(criteriaSpecification).ListAsync<TResult>(cancellationToken),
-            QueryOverSpecification<T, TResult> queryOverSpecification =>
-                await session.ApplySpecification(queryOverSpecification).ListAsync<TResult>(cancellationToken),
-            HqlSpecification<T, TResult> hqlSpecification =>
-                await session.ApplySpecification(hqlSpecification).ListAsync<TResult>(cancellationToken),
-           _ => 
-               await session.ApplySpecification(_specificationEvaluator, specification).ToListAsync(cancellationToken)
-        };
+        return await session.ApplySpecification(specification).ToListAsync(cancellationToken);
     }
 
     public void ExecuteUnitOfWork(Action<IRepository> action)

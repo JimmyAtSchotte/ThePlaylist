@@ -1,7 +1,7 @@
 ﻿using Ardalis.Specification;
 using ThePlaylist.Infrastructure.NHibernate.Evaluators;
 
-namespace ThePlaylist.Infrastructure.NHibernate;
+namespace ThePlaylist.Infrastructure.NHibernate.Specification;
 
 public class LinqToQuerySpecificationEvaluator : ISpecificationEvaluator
 {
