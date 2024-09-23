@@ -25,6 +25,29 @@ public class GenreController(IRepository repository) : Controller
         var result = repository.Add(genre);
         return Ok(result);
     }
+    
+    
+    [HttpPost("api/genres")]
+    public IActionResult AddGeneres([FromBody] GenreAddCommand[] commands)
+    {
+        var result = new List<Genre>();
+        
+        repository.ExecuteUnitOfWork(uow =>
+        {
+            foreach (var command in commands)
+            {
+                var genre = new Genre()
+                {
+                    Name = command.Name,
+                };
+                
+                var g = uow.Add(genre);
+                result.Add(g);
+            }
+        });
+       
+        return Ok(result.ToArray());
+    }
 }
 
 public class GenreAddCommand
