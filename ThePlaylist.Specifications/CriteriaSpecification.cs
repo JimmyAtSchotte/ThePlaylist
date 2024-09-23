@@ -3,12 +3,12 @@ using NHibernate;
 
 namespace ThePlaylist.Specifications;
 
-public abstract class CriteriaSpecification<T>(Action<ICriteria> action) : Specification<T>
+public abstract class CriteriaSpecification<T>(Action<ICriteria> action, params object[] args) : Specification<T>
 {
     public Action<ICriteria> GetCriteria() => action;
 }
 
-public abstract class CriteriaSpecification<T, TResult>(Action<ICriteria> action) : Specification<T, TResult>
+public abstract class CriteriaSpecification<T, TResult>(Action<ICriteria> action, params object[] args) : Specification<T, TResult>
 {
     public Action<ICriteria> GetCriteria() => action;
 }

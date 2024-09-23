@@ -11,10 +11,27 @@ public static partial class SpecificationSetExtensions
         => new ByName(name);
 }
 
-internal sealed class ByName : Specification<Core.Entitites.Playlist, PlaylistName>
+internal sealed class ByName : Specification<Core.Entitites.Playlist>, IEquatable<ByName>
 {
+    private readonly string _name;
+
     public ByName(string name)
     {
+        _name = name;
         Query.Where(x => x.Name == name);
+    }
+
+    public bool Equals(ByName? other)
+    {
+        return _name == other?._name;
+    }
+    public override bool Equals(object? obj)
+    {
+        return ReferenceEquals(this, obj) || obj is ByName other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(_name);
     }
 }
