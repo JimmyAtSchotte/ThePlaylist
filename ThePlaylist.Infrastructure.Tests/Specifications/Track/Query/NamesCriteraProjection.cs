@@ -1,5 +1,6 @@
 using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Track.Criteria;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.Query;
@@ -18,7 +19,7 @@ public class NamesCriteriaProjection
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(track);
         
-        var fetchedTracks = repository.List(new TrackNamesCriteriaProjection());
+        var fetchedTracks = repository.List(Specs.Track.TrackNamesCriteriaProjection());
         
         fetchedTracks.Should().Contain(x => x.Name == track.Name);
     }

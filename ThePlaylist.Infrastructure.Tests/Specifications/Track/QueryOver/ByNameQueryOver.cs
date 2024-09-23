@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Track.QueryOver;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.QueryOver;
@@ -23,7 +24,7 @@ public class ByNameQueryOver
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(track);
         repository.Add(trackB);
-        var fetchedTracks = repository.List(new TrackByNameQueryOver(track.Name)).ToList();
+        var fetchedTracks = repository.List(Specs.Track.TrackByNameQueryOver(track.Name)).ToList();
 
         fetchedTracks.Should().Contain(x => x.Id == track.Id);
         fetchedTracks.Should().NotContain(x => x.Id == trackB.Id);

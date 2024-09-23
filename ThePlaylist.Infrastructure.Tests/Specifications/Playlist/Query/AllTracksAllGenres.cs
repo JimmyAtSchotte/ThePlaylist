@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Playlist.Query;
 
 
@@ -28,7 +29,7 @@ public class AllTracksAllGenresTest
         using var repository = repositorySource.CreateRepository();
         repository.Add(playlist);
 
-        var fetchedPlaylists = repository.List(new AllTracksAllGenres());
+        var fetchedPlaylists = repository.List(Specs.Playlist.AllTracksAllGenres());
         var fetchedPlaylist = fetchedPlaylists.FirstOrDefault(x => x.Id == playlist.Id);
 
         fetchedPlaylist.Tracks.Should().HaveCount(1);

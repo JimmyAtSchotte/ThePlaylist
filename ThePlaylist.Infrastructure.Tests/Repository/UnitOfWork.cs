@@ -2,6 +2,7 @@
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Genre.Query;
 using ThePlaylist.Specifications.Entitites.Track.Query;
 
@@ -24,7 +25,7 @@ public class UnitOfWork
         repository.Add(trackA);
 
         repository.Invoking(r => r.Add(trackB)).Should().Throw<Exception>();
-        repository.Invoking(r => r.Get(new TrackByName(trackB.Name))).Should().Throw<EntityNotFoundException>();
+        repository.Invoking(r => r.Get(Specs.Track.TrackByName(trackB.Name))).Should().Throw<EntityNotFoundException>();
     }
     
     
@@ -50,7 +51,7 @@ public class UnitOfWork
             Console.WriteLine(e);
         }
         
-        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
+        repository.Invoking(r => r.Get(Specs.Genre.ByName(genreA.Name))).Should().Throw<EntityNotFoundException>();
     }
     
     
@@ -77,7 +78,7 @@ public class UnitOfWork
             Console.WriteLine(e);
         }
         
-        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
+        repository.Invoking(r => r.Get(Specs.Genre.ByName(genreA.Name))).Should().Throw<EntityNotFoundException>();
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
@@ -109,8 +110,8 @@ public class UnitOfWork
         }
       
 
-        repository.Invoking(r => r.Get(new GenreByNameQuery(genre.Name))).Should().Throw<EntityNotFoundException>();
-        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
+        repository.Invoking(r => r.Get(Specs.Genre.ByName(genre.Name))).Should().Throw<EntityNotFoundException>();
+        repository.Invoking(r => r.Get(Specs.Genre.ByName(genreA.Name))).Should().Throw<EntityNotFoundException>();
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
@@ -142,7 +143,7 @@ public class UnitOfWork
         }
       
 
-        repository.Invoking(r => r.Get(new GenreByNameQuery(genre.Name))).Should().NotThrow();
-        repository.Invoking(r => r.Get(new GenreByNameQuery(genreA.Name))).Should().Throw<EntityNotFoundException>();
+        repository.Invoking(r => r.Get(Specs.Genre.ByName(genre.Name))).Should().NotThrow();
+        repository.Invoking(r => r.Get(Specs.Genre.ByName(genreA.Name))).Should().Throw<EntityNotFoundException>();
     }
 }

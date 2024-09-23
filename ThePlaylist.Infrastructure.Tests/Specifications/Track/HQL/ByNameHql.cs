@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Track.HQL;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.HQL;
@@ -23,7 +24,7 @@ public class ByNameHql
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(track);
         repository.Add(trackB);
-        var fetchedTracks = repository.List(new TrackByNameHql(track.Name));
+        var fetchedTracks = repository.List(Specs.Track.TrackByNameHql(track.Name));
         
         fetchedTracks.Should().Contain(x => x.Id == track.Id);
         fetchedTracks.Should().NotContain(x => x.Id == trackB.Id);

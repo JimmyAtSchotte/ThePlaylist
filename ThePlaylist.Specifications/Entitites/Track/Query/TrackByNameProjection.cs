@@ -3,7 +3,15 @@ using ThePlaylist.Core.Projections;
 
 namespace ThePlaylist.Specifications.Entitites.Track.Query;
 
-public sealed class TrackByNameProjection : Specification<Core.Entitites.Track, TrackName>
+
+public static partial class SpecificationSetExtensions
+{
+    public static Specification<Core.Entitites.Track, TrackName> TrackByNameProjection(
+        this SpecificationSet<Core.Entitites.Track> set, string name)
+        => new TrackByNameProjection(name);
+}
+
+internal sealed class TrackByNameProjection : Specification<Core.Entitites.Track, TrackName>
 {
     public TrackByNameProjection(string trackName)
     {

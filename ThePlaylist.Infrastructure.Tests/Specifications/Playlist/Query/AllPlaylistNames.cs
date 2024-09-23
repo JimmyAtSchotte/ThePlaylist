@@ -1,5 +1,7 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
+using ThePlaylist.Specifications.Entitites.Playlist.Query;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Playlist.Query;
 
@@ -14,7 +16,7 @@ public class AllPlaylistNames
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(playlist);
 
-        var names = repository.List(new ThePlaylist.Specifications.Entitites.Playlist.Query.AllPlaylistNames());
+        var names = repository.List(Specs.Playlist.AllPlaylistNames());
         names.Should().Contain(x => x.Name == playlist.Name);
     }
 }

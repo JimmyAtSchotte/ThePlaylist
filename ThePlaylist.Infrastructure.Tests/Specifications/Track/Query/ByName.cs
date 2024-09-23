@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Track.Query;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.Query;
@@ -24,7 +25,7 @@ public class ByName
         repository.Add(track);
         repository.Add(trackB);
 
-        var fetchedTracks = repository.List(new TrackByName(track.Name));
+        var fetchedTracks = repository.List(Specs.Track.TrackByName(track.Name));
         
         fetchedTracks.Should().Contain(x => x.Id == track.Id);
         fetchedTracks.Should().NotContain(x => x.Id == trackB.Id);

@@ -2,7 +2,14 @@
 
 namespace ThePlaylist.Specifications.Entitites.Genre.Query;
 
-public sealed class GenreByNameQuery : Specification<Core.Entitites.Genre>
+public static partial class SpecificationSetExtensions
+{
+    public static ISpecification<Core.Entitites.Genre> ByName(this SpecificationSet<Core.Entitites.Genre> set,
+        string name)
+        => new GenreByNameQuery(name);
+}
+
+internal sealed class GenreByNameQuery : Specification<Core.Entitites.Genre>
 {
     public GenreByNameQuery(string name)
     {

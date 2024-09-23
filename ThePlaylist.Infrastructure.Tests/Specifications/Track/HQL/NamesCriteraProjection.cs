@@ -1,5 +1,6 @@
 using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Track.HQL;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.HQL;
@@ -18,7 +19,7 @@ public class NamesHqlProjection
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(track);
         
-        repository.List(new TrackNamesHqlProjection()).Should().Contain(x => x.Name == track.Name);
+        repository.List(Specs.Track.TrackNamesHqlProjection()).Should().Contain(x => x.Name == track.Name);
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]
@@ -32,7 +33,7 @@ public class NamesHqlProjection
         using var repository = repositoryProvider.CreateRepository();
         repository.Add(track);
         
-        var fetchedTracks = repository.List(new TrackNamesHqlTransformerProjection());
+        var fetchedTracks = repository.List(Specs.Track.TrackNamesHqlTransformerProjection());
         
         fetchedTracks.Should().Contain(x => x.Name == track.Name);
     }

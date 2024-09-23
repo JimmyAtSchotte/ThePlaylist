@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Playlist.Query;
 
 namespace ThePlaylist.Infrastructure.Tests.Repository;
@@ -53,7 +54,7 @@ public class ListEntities
         using var repository = repositoryProvider.CreateRepository();
         
         repository.Add(playlist);
-        repository.List<Playlist>(new ByName(playlist.Name)).Should().Contain(x => x.Id == playlist.Id);
+        repository.List(Specs.Playlist.ByName(playlist.Name)).Should().Contain(x => x.Id == playlist.Id);
     }
     
     
@@ -68,6 +69,6 @@ public class ListEntities
         await using var repository = repositoryProvider.CreateRepository();
         
         await repository.AddAsync(playlist, CancellationToken.None);
-        (await repository.ListAsync<Playlist>(new ByName(playlist.Name), CancellationToken.None)).Should().Contain(x => x.Id == playlist.Id);
+        (await repository.ListAsync(Specs.Playlist.ByName(playlist.Name), CancellationToken.None)).Should().Contain(x => x.Id == playlist.Id);
     }
 }
