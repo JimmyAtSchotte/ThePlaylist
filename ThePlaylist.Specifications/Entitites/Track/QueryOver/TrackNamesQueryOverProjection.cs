@@ -2,7 +2,7 @@ using NHibernate.Criterion;
 using NHibernate.Transform;
 using ThePlaylist.Core.Projections;
 
-namespace ThePlaylist.Specifications.Track.QueryOver;
+namespace ThePlaylist.Specifications.Entitites.Track.QueryOver;
 
 public class TrackNamesQueryOverProjection() : QueryOverSpecification<Core.Entitites.Track, TrackName>(queryOver =>
     queryOver

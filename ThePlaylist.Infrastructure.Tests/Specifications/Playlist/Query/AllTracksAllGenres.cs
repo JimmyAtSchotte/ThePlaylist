@@ -4,8 +4,8 @@ using FluentAssertions;
 using NHibernate.Linq;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
+using ThePlaylist.Specifications.Entitites.Playlist.Query;
 using ThePlaylist.Specifications.Playlist;
-using ThePlaylist.Specifications.Playlist.Query;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Playlist.Query;
 

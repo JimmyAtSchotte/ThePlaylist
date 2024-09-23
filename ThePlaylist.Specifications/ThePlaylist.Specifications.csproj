@@ -15,4 +15,8 @@
       <ProjectReference Include="..\ThePlaylist.Core\ThePlaylist.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Entitites\" />
+    </ItemGroup>
+
 </Project>

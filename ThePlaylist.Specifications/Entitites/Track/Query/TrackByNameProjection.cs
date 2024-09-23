@@ -1,7 +1,7 @@
 using Ardalis.Specification;
 using ThePlaylist.Core.Projections;
 
-namespace ThePlaylist.Specifications.Track.Query;
+namespace ThePlaylist.Specifications.Entitites.Track.Query;
 
 public sealed class TrackByNameProjection : Specification<Core.Entitites.Track, TrackName>
 {

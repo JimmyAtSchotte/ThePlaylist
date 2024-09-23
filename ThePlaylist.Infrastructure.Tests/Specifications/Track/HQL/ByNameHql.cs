@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
-using ThePlaylist.Specifications.Track.HQL;
+using ThePlaylist.Specifications.Entitites.Track.HQL;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.HQL;
 

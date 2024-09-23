@@ -1,6 +1,6 @@
 ﻿using Ardalis.Specification;
 
-namespace ThePlaylist.Specifications.Genre.Query;
+namespace ThePlaylist.Specifications.Entitites.Genre.Query;
 
 public sealed class GenreByNameQuery : Specification<Core.Entitites.Genre>
 {

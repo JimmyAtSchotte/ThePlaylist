@@ -1,6 +1,6 @@
 using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
-using ThePlaylist.Specifications.Track.QueryOver;
+using ThePlaylist.Specifications.Entitites.Track.QueryOver;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.QueryOver;
 

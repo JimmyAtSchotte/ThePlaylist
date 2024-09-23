@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
-using ThePlaylist.Specifications.Track.Criteria;
+using ThePlaylist.Specifications.Entitites.Track.Criteria;
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.Criteria;
 

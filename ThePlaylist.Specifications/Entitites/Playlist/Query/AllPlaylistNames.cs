@@ -1,7 +1,7 @@
 using Ardalis.Specification;
 using ThePlaylist.Core.Projections;
 
-namespace ThePlaylist.Specifications.Playlist.Query;
+namespace ThePlaylist.Specifications.Entitites.Playlist.Query;
 
 public sealed class AllPlaylistNames : Specification<Core.Entitites.Playlist, PlaylistName>
 {

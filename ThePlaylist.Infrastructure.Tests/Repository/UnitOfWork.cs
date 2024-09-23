@@ -2,8 +2,8 @@
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
-using ThePlaylist.Specifications.Genre.Query;
-using ThePlaylist.Specifications.Track.Query;
+using ThePlaylist.Specifications.Entitites.Genre.Query;
+using ThePlaylist.Specifications.Entitites.Track.Query;
 
 namespace ThePlaylist.Infrastructure.Tests.Repository;
 

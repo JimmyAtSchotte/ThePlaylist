@@ -1,6 +1,6 @@
 using Ardalis.Specification;
 
-namespace ThePlaylist.Specifications.Track.Query;
+namespace ThePlaylist.Specifications.Entitites.Track.Query;
 
 public sealed class TrackByName : Specification<Core.Entitites.Track>
 {
