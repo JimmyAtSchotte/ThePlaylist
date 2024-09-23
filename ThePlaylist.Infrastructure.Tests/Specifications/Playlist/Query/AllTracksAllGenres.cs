@@ -1,11 +1,8 @@
-﻿using System.Linq.Expressions;
-using System.Reflection;
-using FluentAssertions;
-using NHibernate.Linq;
+﻿using FluentAssertions;
 using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 using ThePlaylist.Specifications.Entitites.Playlist.Query;
-using ThePlaylist.Specifications.Playlist;
+
 
 namespace ThePlaylist.Infrastructure.Tests.Specifications.Playlist.Query;
 
