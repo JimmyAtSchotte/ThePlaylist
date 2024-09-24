@@ -31,13 +31,12 @@ public class NHibernateConfiguration(IServiceCollection services)
                 db.Driver<SqlClientDriver>();
                 db.Dialect<MsSql2012Dialect>();
                 db.ConnectionProvider<DriverConnectionProvider>();
-                db.LogSqlInConsole = true;
-                db.LogFormattedSql = true;
+                // db.LogSqlInConsole = true;
+                // db.LogFormattedSql = true;
             });
             
             configuration.AddMappingsFromAssembly(typeof(IAmMappingsNamespace).Assembly);
             configuration.AddProjectionsFromAssemblyNamespace(typeof(IAmProjectionsNamespace).Assembly, typeof(IAmProjectionsNamespace).Namespace);
-            
     
             return configuration;
         });
