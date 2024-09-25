@@ -9,7 +9,7 @@ namespace ThePlaylist.Infrastructure.Tests.Repository;
 public class Projections
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void Projection(RepositorySource repositoryProvider)
+    public void Projection(IRepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {
@@ -23,7 +23,7 @@ public class Projections
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public async Task ProjectionAsync(RepositorySource repositoryProvider)
+    public async Task ProjectionAsync(IRepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {

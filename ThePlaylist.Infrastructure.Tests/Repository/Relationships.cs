@@ -10,7 +10,7 @@ namespace ThePlaylist.Infrastructure.Tests.Repository;
 public class Relationships
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void ManyToManyRelationship(RepositorySource repositoryProvider)
+    public void ManyToManyRelationship(IRepositorySource repositoryProvider)
     {
         var rock = new Genre() { Name = Guid.NewGuid().ToString() };
         var pop = new Genre() { Name = Guid.NewGuid().ToString() };
@@ -48,7 +48,7 @@ public class Relationships
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void SelfReferencingRelationship(RepositorySource repositoryProvider)
+    public void SelfReferencingRelationship(IRepositorySource repositoryProvider)
     {
         var rock = new Genre() { Name = Guid.NewGuid().ToString() };
         var metal = new Genre() { Name = Guid.NewGuid().ToString() };

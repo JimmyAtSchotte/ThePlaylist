@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.Tests.Repository;
 public class DeleteEntity
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void Delete(RepositorySource repositoryProvider)
+    public void Delete(IRepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -25,7 +25,7 @@ public class DeleteEntity
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public async Task DeleteAsync(RepositorySource repositoryProvider)
+    public async Task DeleteAsync(IRepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {

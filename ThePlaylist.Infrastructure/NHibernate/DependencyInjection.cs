@@ -6,6 +6,7 @@ using NHibernate.Dialect;
 using NHibernate.Driver;
 using NHibernate.Tool.hbm2ddl;
 using ThePlaylist.Core.Projections;
+using Environment = NHibernate.Cfg.Environment;
 
 namespace ThePlaylist.Infrastructure.NHibernate;
 
@@ -20,7 +21,7 @@ public static class DependencyInjection
 
 public class NHibernateConfiguration(IServiceCollection services)
 {
-    public void UseSqlExpress(string connectionString)
+    public void UseSqlExpress(string connectionString, bool logSqlInConsole = true, bool logFormattedSql = true )
     {
         services.AddSingleton<Configuration>(_ =>
         {
@@ -30,14 +31,16 @@ public class NHibernateConfiguration(IServiceCollection services)
                 db.ConnectionString = connectionString;
                 db.Driver<SqlClientDriver>();
                 db.Dialect<MsSql2012Dialect>();
-                db.ConnectionProvider<DriverConnectionProvider>();
-                // db.LogSqlInConsole = true;
-                // db.LogFormattedSql = true;
+                db.ConnectionProvider<DriverConnectionProvider>(); 
+                db.LogSqlInConsole = logSqlInConsole;
+                db.LogFormattedSql = logFormattedSql;
+                
             });
+            
             
             configuration.AddMappingsFromAssembly(typeof(IAmMappingsNamespace).Assembly);
             configuration.AddProjectionsFromAssemblyNamespace(typeof(IAmProjectionsNamespace).Assembly, typeof(IAmProjectionsNamespace).Namespace);
-    
+            
             return configuration;
         });
 

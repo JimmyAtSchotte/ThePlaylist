@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.Tests.Repository;
 public class UpdateEntity
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void Update(RepositorySource repositoryProvider)
+    public void Update(IRepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -28,7 +28,7 @@ public class UpdateEntity
     
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public async Task UpdateAsync(RepositorySource repositoryProvider)
+    public async Task UpdateAsync(IRepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {

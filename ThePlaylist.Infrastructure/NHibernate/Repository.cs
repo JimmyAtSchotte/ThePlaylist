@@ -1,6 +1,7 @@
 ﻿using Ardalis.Specification;
 using NHibernate;
 using NHibernate.Linq;
+using ThePlaylist.Core.Entitites;
 using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Infrastructure.Exceptions;
 using ThePlaylist.Infrastructure.NHibernate.Specification;

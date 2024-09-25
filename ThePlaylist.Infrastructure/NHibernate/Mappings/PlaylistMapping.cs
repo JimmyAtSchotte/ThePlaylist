@@ -1,4 +1,5 @@
-﻿using NHibernate.Mapping.ByCode;
+﻿using NHibernate;
+using NHibernate.Mapping.ByCode;
 using NHibernate.Mapping.ByCode.Conformist;
 using ThePlaylist.Core.Entitites;
 
@@ -24,6 +25,8 @@ public class PlaylistMapping : ClassMapping<Playlist>
             map.Table("PlaylistTracks");
             map.Key(x => x.Column("PlaylistId"));
             map.Cascade(Cascade.All);
+            map.Fetch(CollectionFetchMode.Select);
+            map.Lazy(CollectionLazy.NoLazy); 
         }, rel => rel.ManyToMany(x => x.Column("TrackId")));
         
         Lazy(false);

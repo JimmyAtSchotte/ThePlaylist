@@ -11,7 +11,7 @@ namespace ThePlaylist.Infrastructure.Tests.Specifications.Playlist.Query;
 public class AllTracksAllGenresTest
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void IncludeAllTrackIncludeAllGenres(RepositorySource repositorySource)
+    public void IncludeAllTrackIncludeAllGenres(IRepositorySource repositorySource)
     {
         var playlist = new Core.Entitites.Playlist()
         {

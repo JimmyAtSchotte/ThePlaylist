@@ -13,7 +13,7 @@ public class UnitOfWork
 {
      
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void RollbackOnAggregateRootError(RepositorySource repositoryProvider)
+    public void RollbackOnAggregateRootError(IRepositorySource repositoryProvider)
     {
         var trackA = new Track() { Name = Guid.NewGuid().ToString() };
         var genreA = trackA.AddGenre(new Genre() { Name = Guid.NewGuid().ToString() });
@@ -30,7 +30,7 @@ public class UnitOfWork
     
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void RollbackUnitOfWork(RepositorySource repositoryProvider)
+    public void RollbackUnitOfWork(IRepositorySource repositoryProvider)
     {
         var genreA = new Genre() { Name = Guid.NewGuid().ToString() };
         var genreB = new Genre() { Name = genreA.Name };
@@ -56,7 +56,7 @@ public class UnitOfWork
     
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public async Task RollbackUnitOfWorkAsync(RepositorySource repositoryProvider)
+    public async Task RollbackUnitOfWorkAsync(IRepositorySource repositoryProvider)
     {
         var genreA = new Genre() { Name = Guid.NewGuid().ToString() };
         var genreB = new Genre() { Name = genreA.Name };
@@ -82,7 +82,7 @@ public class UnitOfWork
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void NestedUnitOfWorks(RepositorySource repositoryProvider)
+    public void NestedUnitOfWorks(IRepositorySource repositoryProvider)
     {
         var genre = new Genre() { Name = Guid.NewGuid().ToString() };
         var genreA = new Genre() { Name = Guid.NewGuid().ToString() };
@@ -115,7 +115,7 @@ public class UnitOfWork
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void ChainedUnitOfWorks(RepositorySource repositoryProvider)
+    public void ChainedUnitOfWorks(IRepositorySource repositoryProvider)
     {
         var genre = new Genre() { Name = Guid.NewGuid().ToString() };
         var genreA = new Genre() { Name = Guid.NewGuid().ToString() };

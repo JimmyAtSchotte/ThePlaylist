@@ -9,7 +9,7 @@ namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.HQL;
 public class NamesHqlProjection
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]
-    public void TrackNames(RepositorySource repositoryProvider)
+    public void TrackNames(IRepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {
@@ -23,7 +23,7 @@ public class NamesHqlProjection
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]
-    public void TrackNamesTransformerProjection(RepositorySource repositoryProvider)
+    public void TrackNamesTransformerProjection(IRepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {

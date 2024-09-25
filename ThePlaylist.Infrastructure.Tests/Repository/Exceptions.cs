@@ -9,7 +9,7 @@ namespace ThePlaylist.Infrastructure.Tests.Repository;
 public class Exceptions
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void ThrowsEntityNotFound(RepositorySource repositoryProvider)
+    public void ThrowsEntityNotFound(IRepositorySource repositoryProvider)
     {
         using var repository = repositoryProvider.CreateRepository();
         repository.Invoking(r => r.Get<Playlist>(Guid.NewGuid())).Should().Throw<EntityNotFoundException>();

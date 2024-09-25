@@ -1,6 +1,5 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using Ardalis.Specification;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,6 @@ using NHibernate;
 using NHibernate.Cfg;
 using NHibernate.Tool.hbm2ddl;
 using ThePlaylist.Core.Entitites;
-using ThePlaylist.Core.Interfaces;
 using ThePlaylist.Infrastructure.EntityFramework;
 using ThePlaylist.Infrastructure.NHibernate;
 using ThePlaylist.Specifications;
@@ -28,7 +26,7 @@ public class RepsoitoryBenchmark
     public void Setup()
     {
         var serviceCollection = new ServiceCollection();
-        serviceCollection.AddNHibernate(options => options.UseSqlExpress(ConnnectionString));
+        serviceCollection.AddNHibernate(options => options.UseSqlExpress(ConnnectionString, false, false));
         serviceCollection.AddTransient(services =>
             new ThePlaylist.Infrastructure.NHibernate.Repository(services.GetRequiredService<ISession>()));
         

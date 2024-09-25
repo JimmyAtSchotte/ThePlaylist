@@ -5,14 +5,14 @@ namespace ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 
 public class RepositorySources
 {
-    public static IEnumerable<RepositorySource> RepositoryProviders => new RepositorySource[]
+    public static IEnumerable<IRepositorySource> RepositoryProviders => new IRepositorySource[]
     { 
         new NHibernateSqlExpressRepositorySource(),
         new NHibernateSqlLiteRepositorySource(),
         new EfCoreSqlExpressRepositorySource()
     }; 
     
-    public static IEnumerable<RepositorySource> NHibernateOnlyRepositoryProviders => new RepositorySource[]
+    public static IEnumerable<IRepositorySource> NHibernateOnlyRepositoryProviders => new IRepositorySource[]
     { 
         new NHibernateSqlExpressRepositorySource(),
         new NHibernateSqlLiteRepositorySource()

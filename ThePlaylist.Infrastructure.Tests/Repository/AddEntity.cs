@@ -8,7 +8,7 @@ namespace ThePlaylist.Infrastructure.Tests.Repository;
 public class AddEntity
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void Add(RepositorySource repositoryProvider)
+    public void Add(IRepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {
@@ -23,7 +23,7 @@ public class AddEntity
     }
     
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public async Task AddAsync(RepositorySource repositoryProvider)
+    public async Task AddAsync(IRepositorySource repositoryProvider)
     {
         var playlist = new Playlist()
         {

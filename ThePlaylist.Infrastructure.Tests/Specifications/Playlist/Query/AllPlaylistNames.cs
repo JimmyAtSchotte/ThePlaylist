@@ -9,7 +9,7 @@ namespace ThePlaylist.Infrastructure.Tests.Specifications.Playlist.Query;
 public class AllPlaylistNames
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.RepositoryProviders))]
-    public void Select(RepositorySource repositoryProvider)
+    public void Select(IRepositorySource repositoryProvider)
     {
         var playlist = new Core.Entitites.Playlist() { Name = "My playlist" };
       

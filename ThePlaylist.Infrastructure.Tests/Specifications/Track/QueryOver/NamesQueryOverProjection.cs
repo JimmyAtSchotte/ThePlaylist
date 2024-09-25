@@ -9,7 +9,7 @@ namespace ThePlaylist.Infrastructure.Tests.Specifications.Track.QueryOver;
 public class NamesQueryOverProjection
 {
     [TestCaseSource(typeof(RepositorySources), nameof(RepositorySources.NHibernateOnlyRepositoryProviders))]
-    public void TrackNames(RepositorySource repositoryProvider)
+    public void TrackNames(IRepositorySource repositoryProvider)
     {
         var track = new Core.Entitites.Track
         {
