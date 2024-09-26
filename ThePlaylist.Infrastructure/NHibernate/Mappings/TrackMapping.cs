@@ -32,11 +32,13 @@ public class TrackMapping : ClassMapping<Track>
         Set(x => x.Genres, map =>
         {
             map.Table("TrackGenres");
-            map.Key(x => x.Column("TrackId"));
-            map.Cascade(Cascade.All);
+            map.Key(x =>
+            {
+                x.Column("TrackId");
+                x.ForeignKey("FK_TrackGenres_Track");
+            });
+            map.Cascade(Cascade.Persist | Cascade.Merge);
         }, rel => rel.ManyToMany(x => x.Column("GenreId")));
-        
-        Lazy(false);
     }
 }
 

@@ -46,6 +46,16 @@ public class NHibernateSqlLiteRepositorySource : IRepositorySource
                         FOREIGN KEY (PlaylistId) REFERENCES Playlists(Id) ON DELETE CASCADE,
                         FOREIGN KEY (TrackId) REFERENCES Tracks(Id) ON DELETE CASCADE
                     );
+
+                    DROP TABLE TrackGenres;
+
+                    CREATE TABLE TrackGenres (
+                        TrackId BLOB NOT NULL,
+                        GenreId BLOB NOT NULL,
+                        PRIMARY KEY (TrackId, GenreId),
+                        FOREIGN KEY (TrackId) REFERENCES Tracks(Id) ON DELETE CASCADE,
+                        FOREIGN KEY (GenreId) REFERENCES Genres(Id) ON DELETE CASCADE
+                    );
                 ";
             command.ExecuteNonQuery();
         }

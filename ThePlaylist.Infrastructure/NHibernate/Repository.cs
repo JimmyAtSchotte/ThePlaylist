@@ -25,14 +25,16 @@ public class Repository(ISession session) : IRepository
     public T Get<T>(ISpecification<T> specification) where T : class
     {
         return session.ApplySpecification(specification)
-            .FirstOrDefault()
+            .ToList()
+            .SingleOrDefault()
             .EnsureEntityFound()!;
     }
 
-    public Task<T> GetAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
+    public async Task<T> GetAsync<T>(ISpecification<T> specification, CancellationToken cancellationToken) where T : class
     {
-        return session.ApplySpecification(specification)
-            .FirstOrDefaultAsync(cancellationToken)
+        return (await session.ApplySpecification(specification)
+            .ToListAsync(cancellationToken))
+            .SingleOrDefault()
             .EnsureEntityFound()!;
     }
 

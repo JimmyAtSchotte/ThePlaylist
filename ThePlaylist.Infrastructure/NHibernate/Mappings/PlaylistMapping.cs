@@ -29,11 +29,6 @@ public class PlaylistMapping : ClassMapping<Playlist>
                 x.ForeignKey("FK_PlaylistTracks_Playlist");
             });
             map.Cascade(Cascade.Persist | Cascade.Merge);
-            map.Fetch(CollectionFetchMode.Select);
-            map.Lazy(CollectionLazy.NoLazy); 
         }, rel => rel.ManyToMany(x => x.Column("TrackId")));
-        
-        Lazy(false);
-
     }
 }

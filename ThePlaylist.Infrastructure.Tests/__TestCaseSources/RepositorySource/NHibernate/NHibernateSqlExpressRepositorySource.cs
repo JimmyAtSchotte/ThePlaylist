@@ -27,18 +27,31 @@ public class NHibernateSqlExpressRepositorySource : IRepositorySource
         using var command = session.Connection.CreateCommand();
         command.CommandText = @"
                 ALTER TABLE PlaylistTracks DROP CONSTRAINT FK_PlaylistTracks_Track;
-                ALTER TABLE PlaylistTracks DROP CONSTRAINT FK_PlaylistTracks_Playlist;
-
                 ALTER TABLE PlaylistTracks
                 ADD CONSTRAINT FK_PlaylistTracks_Track
                 FOREIGN KEY (TrackId)
                 REFERENCES Tracks (Id)
                 ON DELETE CASCADE;
                 
+                ALTER TABLE PlaylistTracks DROP CONSTRAINT FK_PlaylistTracks_Playlist;
                 ALTER TABLE PlaylistTracks
                 ADD CONSTRAINT FK_PlaylistTracks_Playlist
                 FOREIGN KEY (PlaylistId)
                 REFERENCES Playlists (Id)
+                ON DELETE CASCADE;
+
+                ALTER TABLE TrackGenres DROP CONSTRAINT FK_TrackGenres_Track;
+                ALTER TABLE TrackGenres
+                ADD CONSTRAINT FK_TrackGenres_Track
+                FOREIGN KEY (TrackId)
+                REFERENCES Tracks (Id)
+                ON DELETE CASCADE;
+                
+                ALTER TABLE TrackGenres DROP CONSTRAINT FK_TrackGenres_Genre;
+                ALTER TABLE TrackGenres
+                ADD CONSTRAINT FK_TrackGenres_Genre
+                FOREIGN KEY (GenreId)
+                REFERENCES Genres (Id)
                 ON DELETE CASCADE;
             ";
         command.ExecuteNonQuery();

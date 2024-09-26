@@ -20,9 +20,13 @@ public class GenreMapping : ClassMapping<Genre>
         Set(x => x.Tracks, map =>
         {
             map.Table("TrackGenres");
-            map.Key(x => x.Column("GenreId"));
+            map.Key(x =>
+            {
+                x.Column("GenreId");
+                x.ForeignKey("FK_TrackGenres_Genre");
+            });
             map.Inverse(true);
-            map.Cascade(Cascade.All);
+            map.Cascade(Cascade.None);
         }, rel => rel.ManyToMany(x => x.Column("TrackId")));
         
         ManyToOne(x => x.Parent, map =>
@@ -38,7 +42,5 @@ public class GenreMapping : ClassMapping<Genre>
             map.Inverse(true);
             map.Cascade(Cascade.All.Include(Cascade.DeleteOrphans));
         }, map => map.OneToMany());
-        
-        Lazy(false);
     }
 }

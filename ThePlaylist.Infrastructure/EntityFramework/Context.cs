@@ -70,8 +70,8 @@ public class Context(DbContextOptions options) : DbContext(options)
                 .WithMany(x => x.Tracks)
                 .UsingEntity<Dictionary<string, object>>(
                 "TrackGenres",
-                j => j.HasOne<Genre>().WithMany().HasForeignKey("GenreId"),
-                j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId"),
+                j => j.HasOne<Genre>().WithMany().HasForeignKey("GenreId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId").OnDelete(DeleteBehavior.Cascade),
                 j =>
                 {
                     j.ToTable("TrackGenres");
@@ -99,8 +99,8 @@ public class Context(DbContextOptions options) : DbContext(options)
                 .WithMany(x => x.Genres)
                 .UsingEntity<Dictionary<string, object>>(
                 "TrackGenres",
-                j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId"),
-                j => j.HasOne<Genre>().WithMany().HasForeignKey("GenreId"),
+                j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<Genre>().WithMany().HasForeignKey("GenreId").OnDelete(DeleteBehavior.Cascade),
                 j => j.ToTable("TrackGenres")
                 );
 

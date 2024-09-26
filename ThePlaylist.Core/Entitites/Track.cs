@@ -37,4 +37,11 @@ public class Track : IEntity
         playlists.Add(playlist);
         _playlists = playlists;
     }
+
+    public virtual void RemoveGenre(Genre genre)
+    {
+        var genres = _genres.ToList();
+        genres.Remove(genre);
+        _genres = genres;
+    }
 }
