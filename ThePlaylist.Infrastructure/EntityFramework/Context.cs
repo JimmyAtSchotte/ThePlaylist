@@ -30,8 +30,8 @@ public class Context(DbContextOptions options) : DbContext(options)
                     .WithMany(x => x.Playlists)
                     .UsingEntity<Dictionary<string, object>>(
                         "PlaylistTracks",
-                        j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId"),
-                        j => j.HasOne<Playlist>().WithMany().HasForeignKey("PlaylistId"),
+                        j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId").OnDelete(DeleteBehavior.Cascade),
+                        j => j.HasOne<Playlist>().WithMany().HasForeignKey("PlaylistId").OnDelete(DeleteBehavior.Cascade),
                         j =>
                         {
                             j.ToTable("PlaylistTracks");
@@ -57,8 +57,8 @@ public class Context(DbContextOptions options) : DbContext(options)
                 .WithMany(x => x.Tracks)
                 .UsingEntity<Dictionary<string, object>>(
                 "PlaylistTracks",
-                j => j.HasOne<Playlist>().WithMany().HasForeignKey("PlaylistId"),
-                j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId"),
+                j => j.HasOne<Playlist>().WithMany().HasForeignKey("PlaylistId").OnDelete(DeleteBehavior.Cascade),
+                j => j.HasOne<Track>().WithMany().HasForeignKey("TrackId").OnDelete(DeleteBehavior.Cascade),
                 j =>
                 {
                     j.ToTable("PlaylistTracks");

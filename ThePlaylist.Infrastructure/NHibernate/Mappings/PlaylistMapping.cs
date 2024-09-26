@@ -23,8 +23,12 @@ public class PlaylistMapping : ClassMapping<Playlist>
         Set(x => x.Tracks, map =>
         {
             map.Table("PlaylistTracks");
-            map.Key(x => x.Column("PlaylistId"));
-            map.Cascade(Cascade.All);
+            map.Key(x =>
+            {
+                x.Column("PlaylistId");
+                x.ForeignKey("FK_PlaylistTracks_Playlist");
+            });
+            map.Cascade(Cascade.Persist | Cascade.Merge);
             map.Fetch(CollectionFetchMode.Select);
             map.Lazy(CollectionLazy.NoLazy); 
         }, rel => rel.ManyToMany(x => x.Column("TrackId")));

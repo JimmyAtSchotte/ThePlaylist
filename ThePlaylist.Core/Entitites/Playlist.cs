@@ -26,4 +26,11 @@ public class Playlist : IEntity
         
         return track;
     }
+
+    public void DeleteTrack(Track track)
+    {
+        var tracks = _tracks.ToList();
+        tracks.Remove(track);
+        _tracks = tracks;
+    }
 }

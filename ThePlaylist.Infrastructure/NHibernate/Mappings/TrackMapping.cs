@@ -19,9 +19,13 @@ public class TrackMapping : ClassMapping<Track>
         Set(x => x.Playlists, map =>
         {
             map.Table("PlaylistTracks");
-            map.Key(x => x.Column("TrackId"));
+            map.Key(x =>
+            {
+                x.Column("TrackId");
+                x.ForeignKey("FK_PlaylistTracks_Track");
+            });
             map.Inverse(true);
-            map.Cascade(Cascade.All);
+            map.Cascade(Cascade.None);
         }, rel => rel.ManyToMany(x => x.Column("PlaylistId")));
         
         

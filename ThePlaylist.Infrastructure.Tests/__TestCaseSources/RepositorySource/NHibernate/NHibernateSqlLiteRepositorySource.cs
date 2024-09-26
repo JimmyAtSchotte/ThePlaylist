@@ -18,14 +18,37 @@ public class NHibernateSqlLiteRepositorySource : IRepositorySource
     {
         var serviceCollection = new ServiceCollection();
         serviceCollection.AddNHibernate(options => options.UseSqlLite());
-        serviceCollection.AddTransient<IRepository, Infrastructure.NHibernate.Repository>();
         
         var services = serviceCollection.BuildServiceProvider();
         var configuration = services.GetRequiredService<Configuration>();
+        
         _session = services.GetRequiredService<ISession>();
-        _repository = services.GetRequiredService<IRepository>();
+        _repository = new Infrastructure.NHibernate.Repository(_session);
         
         new SchemaExport(configuration).Execute(true, true, false, _session.Connection, null);
+        
+        using (var command = _session.Connection.CreateCommand())
+        {
+            command.CommandText = "PRAGMA foreign_keys = ON;";
+            command.ExecuteNonQuery();
+        }
+
+        //Recreate tables that uses cascade delete constraints
+        using (var command = _session.Connection.CreateCommand())
+        {
+            command.CommandText = @"
+                    DROP TABLE PlaylistTracks;
+
+                    CREATE TABLE PlaylistTracks (
+                        PlaylistId BLOB NOT NULL,
+                        TrackId BLOB NOT NULL,
+                        PRIMARY KEY (PlaylistId, TrackId),
+                        FOREIGN KEY (PlaylistId) REFERENCES Playlists(Id) ON DELETE CASCADE,
+                        FOREIGN KEY (TrackId) REFERENCES Tracks(Id) ON DELETE CASCADE
+                    );
+                ";
+            command.ExecuteNonQuery();
+        }
         
         _initialized = true;
     }
@@ -35,6 +58,20 @@ public class NHibernateSqlLiteRepositorySource : IRepositorySource
         if(!_initialized)
             Initialize();
         
+        _session.Clear();
+        
+        return _repository;
+    }
+    
+    public IRepository CreateRepository(params object[] entities)
+    {
+        if(!_initialized)
+            Initialize();
+        
+        foreach (var variable in entities)
+            _session.Save(variable);
+        
+        _session.Flush();
         _session.Clear();
         
         return _repository;

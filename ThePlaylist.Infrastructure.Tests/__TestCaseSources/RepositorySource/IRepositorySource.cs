@@ -5,4 +5,5 @@ namespace ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 public interface IRepositorySource
 {
     IRepository CreateRepository();
+    IRepository CreateRepository(params object[] entities);
 }

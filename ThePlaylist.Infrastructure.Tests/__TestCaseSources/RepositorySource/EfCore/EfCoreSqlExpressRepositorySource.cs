@@ -11,7 +11,7 @@ public class EfCoreSqlExpressRepositorySource : IRepositorySource
     private IServiceProvider? _services;
     private IServiceProvider Services => _services ??= Initialize();
 
-    private const string CONNECTION_STRING = "Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test;Trusted_Connection=True;TrustServerCertificate=True;";
+    private const string CONNECTION_STRING = "Server=1337-JIMMY\\SQLEXPRESS;Database=ThePlaylist_Test_EFCore;Trusted_Connection=True;TrustServerCertificate=True;";
 
     private static IServiceProvider Initialize()
     {
@@ -20,16 +20,13 @@ public class EfCoreSqlExpressRepositorySource : IRepositorySource
         {
             options.UseSqlServer(CONNECTION_STRING);
             options.LogTo(Console.WriteLine);
-        });
-        serviceCollection.AddScoped<IRepository, EntityFramework.Repository>();
+        }, ServiceLifetime.Transient);
+        serviceCollection.AddTransient<IRepository, EntityFramework.Repository>();
         
         var services = serviceCollection.BuildServiceProvider();
         var context = services.GetRequiredService<Context>();
-        context.Database.ExecuteSqlRaw(@"DELETE FROM TrackGenres
-                                         DELETE FROM PlaylistTracks
-                                         DELETE FROM Genres
-                                         DELETE FROM Playlists
-                                         DELETE FROM Tracks");
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
         
         return services;
     }
@@ -39,5 +36,21 @@ public class EfCoreSqlExpressRepositorySource : IRepositorySource
         Services.GetRequiredService<Context>().ChangeTracker.Clear();
         
         return Services.GetRequiredService<IRepository>();
+    }
+
+    public IRepository CreateRepository(params object[] entities)
+    {
+        var context = Services.GetRequiredService<Context>();
+        
+        foreach (var entity in entities)
+        {
+            context.Add(entity);
+        }
+
+        context.SaveChanges();
+        context.ChangeTracker.Clear();
+        
+        return Services.GetRequiredService<IRepository>();
+        
     }
 }

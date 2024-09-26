@@ -56,8 +56,8 @@ public class GetEntity
             Name = "My track 2",
         });
         
-        using var repository = repositoryProvider.CreateRepository();
-        repository.Add(playlist);
+        using (var repository = repositoryProvider.CreateRepository())
+            repository.Add(playlist);
 
         Playlist fetchedPlaylist;
         
