@@ -38,10 +38,8 @@ public class Context(DbContextOptions options) : DbContext(options)
                             j.HasKey("PlaylistId", "TrackId");
                         }
                     );
-            })
-            
-            
-            ;
+            });
+        
         modelBuilder.Entity<Track>(builder =>
         {
             builder.ToTable("Tracks");
