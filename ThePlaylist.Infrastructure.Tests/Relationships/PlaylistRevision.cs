@@ -20,15 +20,16 @@ public class PlaylistRevision
         {
             Name = "TestPlaylist",
         };
+        playlist.CreateRevision(current => current.Name = "UpdatedPlaylist 1");
 
         using var repository = repositorySource.CreateRepository(playlist);
-        var addRevision = repository.Get(Specs.ById<Playlist>(playlist.Id));
+        var entity = repository.Get(Specs.ById<Playlist>(playlist.Id));
+        entity.CreateRevision(current => current.Name = "UpdatedPlaylist 2");
+        repository.Add(entity);
         
-        addRevision.CreateRevision(current => current.Name = "UpdatedPlaylist");
-        repository.Update(addRevision);
+        var updatedEntity = repository.Get(Specs.ById<Playlist>(playlist.Id, query => query.Include(x => x.Revisions)));
         
-        var updatedRevision = repository.Get(Specs.ById<Playlist>(playlist.Id, query => query.Include(x => x.Revisions)));
-        
-        updatedRevision.Revisions.Should().HaveCount(1);
+        updatedEntity.Revisions.Should().HaveCount(2);
+        updatedEntity.Revisions.First().Id.Should().NotBe(Guid.Empty);
     }
 }

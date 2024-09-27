@@ -2,8 +2,8 @@
 
 public class PlaylistRevision : PlaylistBase
 {
-    public Guid PlaylistId { get; set; }
-    public Playlist Playlist { get; set; }
+    public virtual Guid PlaylistId { get; set; }
+    public virtual Playlist Playlist { get; set; }
     
     public PlaylistRevision()
     {
