@@ -9,8 +9,6 @@ public static class Specs
     public static SpecificationSet<Track> Track => new SpecificationSet<Track>();
     public static SpecificationSet<Genre> Genre => new SpecificationSet<Genre>();
     
-    
-    
     public static ISpecification<T> ById<T>(Guid id) 
         where T : IEntity => new ById<T>(id);
     

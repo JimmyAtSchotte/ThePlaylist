@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using ThePlaylist.Core.Entitites;
 using ThePlaylist.Infrastructure.Tests.__TestCaseSources.RepositorySource;
 using ThePlaylist.Specifications;
 using ThePlaylist.Specifications.Entitites.Track.Query;
@@ -40,7 +41,6 @@ public class TrackName
         
         await using var repository = repositoryProvider.CreateRepository();
         await repository.AddAsync(track, CancellationToken.None);
-        
         
         var specification = Specs.Track.TrackByName<Core.Projections.TrackName>(track.Name,
         x => new Core.Projections.TrackName()
