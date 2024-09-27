@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution", "Solution", "{2E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlaylist.Infrastructure.Benchmark", "ThePlaylist.Infrastructure.Benchmark\ThePlaylist.Infrastructure.Benchmark.csproj", "{176300AC-95B3-483B-B1BD-1DE7BD46E307}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThePlaylist.Core.Tests", "ThePlaylist.Core.Tests\ThePlaylist.Core.Tests.csproj", "{47781886-CE71-47C7-9679-989F75B51ADC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,5 +52,9 @@ Global
 		{176300AC-95B3-483B-B1BD-1DE7BD46E307}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{176300AC-95B3-483B-B1BD-1DE7BD46E307}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{176300AC-95B3-483B-B1BD-1DE7BD46E307}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47781886-CE71-47C7-9679-989F75B51ADC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47781886-CE71-47C7-9679-989F75B51ADC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47781886-CE71-47C7-9679-989F75B51ADC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47781886-CE71-47C7-9679-989F75B51ADC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
